@@ -1,0 +1,11 @@
+node_modules
+.git
+.agents
+.codex
+.env
+.env.*
+!.env.example
+npm-debug.log*
+coverage
+docs
+public/css/app.css

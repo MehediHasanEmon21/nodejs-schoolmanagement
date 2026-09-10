@@ -1,0 +1,14 @@
+<% const fieldId = locals.id || name; const fieldType = ['text', 'email', 'password', 'number', 'date', 'tel', 'search'].includes(locals.type) ? type : 'text'; const invalid = Boolean(locals.error); %>
+<div class="space-y-2">
+  <label for="<%= fieldId %>" class="block text-sm font-medium text-slate-800"><%= label %><% if (locals.required) { %> <span aria-hidden="true">*</span><% } %></label>
+  <% if (locals.options) { %>
+    <select id="<%= fieldId %>" name="<%= name %>" class="field" aria-invalid="<%= invalid %>" <% if (locals.required) { %>required<% } %> <% if (invalid || locals.hint) { %>aria-describedby="<%= fieldId %>-help"<% } %>>
+      <% for (const option of options) { %><option value="<%= option.value %>" <% if (String(option.value) === String(locals.value ?? '')) { %>selected<% } %>><%= option.label %></option><% } %>
+    </select>
+  <% } else if (locals.type === 'textarea') { %>
+    <textarea id="<%= fieldId %>" name="<%= name %>" rows="4" class="field" aria-invalid="<%= invalid %>" <% if (locals.required) { %>required<% } %> <% if (invalid || locals.hint) { %>aria-describedby="<%= fieldId %>-help"<% } %>><%= locals.value ?? '' %></textarea>
+  <% } else { %>
+    <input id="<%= fieldId %>" name="<%= name %>" type="<%= fieldType %>" value="<%= fieldType === 'password' ? '' : (locals.value ?? '') %>" class="field" aria-invalid="<%= invalid %>" <% if (locals.autocomplete) { %>autocomplete="<%= autocomplete %>"<% } %> <% if (locals.required) { %>required<% } %> <% if (invalid || locals.hint) { %>aria-describedby="<%= fieldId %>-help"<% } %>>
+  <% } %>
+  <% if (invalid || locals.hint) { %><p id="<%= fieldId %>-help" class="text-sm <%= invalid ? 'text-red-700' : 'text-slate-500' %>"><%= invalid ? error : hint %></p><% } %>
+</div>

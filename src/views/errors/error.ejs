@@ -1,0 +1,9 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Home', href: '/' }, { label: title }] }) %>
+<section class="panel px-6 py-10 sm:px-10">
+  <%- include('../partials/header', { eyebrow: String(status), heading: title, description: message }) %>
+  <a href="/" class="btn btn-primary">Back to home</a>
+  <p class="mt-8 text-xs text-slate-500">Reference: <%= requestId %></p>
+  <% if (diagnostic) { %><p class="mt-3 text-xs text-slate-500">Development diagnostic: <%= diagnostic %>. Match this reference in the application logs.</p><% } %>
+</section>
+<%- include('../layouts/end') %>

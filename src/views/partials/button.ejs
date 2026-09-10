@@ -1,0 +1,1 @@
+<button type="<%= ['button', 'submit', 'reset'].includes(locals.type) ? type : 'button' %>" class="btn <%= locals.variant === 'secondary' ? 'btn-secondary' : 'btn-primary' %>" <% if (locals.disabled) { %>disabled<% } %>><%= label %></button>

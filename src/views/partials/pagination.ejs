@@ -1,0 +1,7 @@
+<nav aria-label="Pagination" class="mt-5 flex flex-wrap items-center justify-between gap-4 text-sm">
+  <p class="text-slate-500">Page <%= page %> of <%= totalPages %></p>
+  <div class="flex gap-2">
+    <% if (locals.previousUrl) { %><a class="btn btn-secondary" href="<%= previousUrl %>" rel="prev">Previous</a><% } else { %><span class="btn btn-secondary opacity-50" aria-disabled="true">Previous</span><% } %>
+    <% if (locals.nextUrl) { %><a class="btn btn-secondary" href="<%= nextUrl %>" rel="next">Next</a><% } else { %><span class="btn btn-secondary opacity-50" aria-disabled="true">Next</span><% } %>
+  </div>
+</nav>

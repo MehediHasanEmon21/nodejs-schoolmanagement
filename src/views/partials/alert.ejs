@@ -1,0 +1,2 @@
+<% const tones = { info: 'border-sky-200 bg-sky-50 text-sky-900', success: 'border-teal-200 bg-teal-50 text-teal-900', error: 'border-red-200 bg-red-50 text-red-900' }; const tone = locals.kind || 'info'; %>
+<div role="<%= tone === 'error' ? 'alert' : 'status' %>" class="rounded-lg border px-4 py-3 text-sm <%= tones[tone] || tones.info %>"><%= message %></div>

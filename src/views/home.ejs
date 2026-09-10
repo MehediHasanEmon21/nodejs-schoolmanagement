@@ -1,0 +1,14 @@
+<%- include('layouts/start') %>
+<%- include('partials/header', { eyebrow: 'Welcome to your school', heading: 'Every school day, connected.', description: 'A shared home for the people, learning, and everyday moments that make your school community.' }) %>
+<section class="panel overflow-hidden" aria-labelledby="welcome-title">
+  <div class="border-b border-teal-100 bg-teal-50 px-6 py-8 sm:px-8">
+    <p class="mb-3 text-sm font-medium text-teal-800">One community. A world of possibility.</p>
+    <h2 id="welcome-title" class="max-w-lg text-2xl font-semibold leading-snug tracking-tight text-teal-950">More time for what matters.<br>More room to learn and grow.</h2>
+  </div>
+  <div id="about" class="grid gap-8 px-6 py-8 sm:grid-cols-3 sm:px-8">
+    <% for (const item of [{ number: '01', title: 'People first', text: 'Students, teachers, and families at the heart of school life.' }, { number: '02', title: 'Learning together', text: 'A place to bring academic life and shared goals together.' }, { number: '03', title: 'Everyday clarity', text: 'A simpler way to stay connected with your school community.' }]) { %>
+      <div><span class="text-xs font-semibold tracking-widest text-teal-700"><%= item.number %></span><h3 class="mt-3 font-semibold text-slate-900"><%= item.title %></h3><p class="mt-2 text-sm leading-6 text-slate-500"><%= item.text %></p></div>
+    <% } %>
+  </div>
+</section>
+<%- include('layouts/end') %>

@@ -1,0 +1,21 @@
+@import "tailwindcss" source(none);
+@source "../views";
+@source "../../public/js";
+
+@theme {
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body { @apply bg-slate-50 text-slate-800 antialiased; }
+  button, a, input, select, textarea { @apply focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700; }
+}
+
+@layer components {
+  .btn { @apply inline-flex min-h-11 items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-colors; }
+  .btn-primary { @apply bg-teal-800 text-white hover:bg-teal-900 disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-secondary { @apply border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50; }
+  .field { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base; }
+  .field[aria-invalid="true"] { @apply border-red-600; }
+  .panel { @apply rounded-2xl border border-slate-200 bg-white; }
+}
