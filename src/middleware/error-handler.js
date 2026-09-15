@@ -1,5 +1,7 @@
 const pages = {
   400: ['Check your request', 'We could not read that request. Please check your input and try again.'],
+  403: ['Request rejected', 'Your form has expired or is invalid. Reload the page and try again.'],
+  429: ['Too many login attempts', 'Please wait before trying to log in again.'],
   404: ['Page not found', 'The page you are looking for is not available.'],
   413: ['Request too large', 'Please reduce the amount of data and try again.'],
   415: ['Unsupported request format', 'Please use a supported content type and encoding.'],

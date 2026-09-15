@@ -1,6 +1,6 @@
 # School Management System
 
-Node.js + Express + MongoDB with server-rendered EJS views, Tailwind CSS, and vanilla JavaScript. Phase 3 provides the shared application foundation; authentication and school modules follow in later phases.
+Node.js + Express + MongoDB with server-rendered EJS views, Tailwind CSS, and vanilla JavaScript. Phase 4 adds secure session authentication and a protected dashboard to the shared application foundation.
 
 ## Requirements and startup
 
@@ -8,14 +8,27 @@ Install Docker with Docker Compose. Host Node.js and MongoDB are not required.
 
 ```bash
 cp .env.example .env
-docker compose config --quiet
 docker compose build
+docker compose run --rm --no-deps app node --input-type=module -e 'import { randomBytes } from "node:crypto"; import { readFileSync, writeFileSync } from "node:fs"; const path = ".env"; const value = readFileSync(path, "utf8"); writeFileSync(path, value.replace(/^SESSION_SECRET=.*$/m, "SESSION_SECRET=" + randomBytes(32).toString("hex")));'
+docker compose config --quiet
 docker compose up -d --wait
 ```
 
-If `.env` already exists, preserve it. Open http://localhost:3000. The page displays “Every school day, connected.” This checkout uses http://localhost:3001 because port 3000 is occupied; check `PORT` in your local `.env`. The app listens only after connecting to MongoDB. MongoDB is reachable as `mongo:27017` inside Compose and has no published host port.
+If `.env` already exists, preserve it and skip the copy and secret-generation commands when a valid secret is already configured. The generation command writes a new random secret directly to `.env` without printing it; replacing an existing secret invalidates sessions. Open http://localhost:3000. This checkout uses http://localhost:3001 because port 3000 is occupied; check `PORT` in your local `.env`. The app listens only after connecting to MongoDB. MongoDB is reachable as `mongo:27017` inside Compose and has no published host port.
 
-The local `.env` is ignored by Git and the Docker build. Set `PORT` to change both the app and host port. `MONGODB_URI` points to the Compose service; `TZ` sets the school development timezone. `SESSION_SECRET` is reserved for Phase 4, when it must be a generated secret; authentication is not implemented yet. Compose loads `.env`, and Node's built-in environment-file support also supports the start script without another dependency.
+The local `.env` is ignored by Git and the Docker build. Set `PORT` to change both the app and host port. `MONGODB_URI` points to the Compose service; `TZ` sets the school development timezone. `SESSION_SECRET` must be a generated secret of at least 32 characters; missing values and placeholders prevent startup. Compose loads `.env`, and Node's built-in environment-file support also supports the start script without another dependency.
+
+## First administrator and login
+
+After the containers are healthy, run this in an interactive terminal:
+
+```bash
+docker compose exec app npm run setup:admin
+```
+
+Enter the administrator name, email, and a password of 12–128 characters. Password entry and confirmation are hidden. Setup creates the first Super Admin and refuses to overwrite an existing account. There are no default credentials or public signup routes.
+
+Visit `/login`, sign in, and use **Log out** to end the session. `/dashboard` requires an active account. Sessions persist in MongoDB, expire after 30 minutes of inactivity or 12 hours total by default, and are invalidated when an account becomes inactive. See [authentication](docs/authentication.md) for configuration and verification details.
 
 ## Development commands
 
@@ -27,6 +40,7 @@ docker compose logs -f
 docker compose exec app npm run check
 docker compose exec app npm run build
 docker compose exec app npm test
+docker compose exec app npm run test:integration
 docker compose exec app npm install
 docker compose down
 ```
@@ -42,7 +56,7 @@ docker compose run --rm --no-deps app npm ci
 docker compose up -d --build
 ```
 
-`npm run check` checks all project JavaScript syntax. `npm run build` compiles minified Tailwind CSS. Run the build before `npm test` on a fresh checkout: the HTTP tests verify the actual compiled asset. Tests use Node’s built-in runner and ephemeral HTTP ports, without changing school data or requiring a database connection. There is no separate linter yet.
+`npm run check` checks all project JavaScript syntax. `npm run build` compiles minified Tailwind CSS. Run the build before `npm test` on a fresh checkout: the HTTP tests verify the actual compiled asset. Unit and foundation tests use Node’s built-in runner and ephemeral HTTP ports without requiring a database connection. `npm run test:integration` verifies authentication with MongoDB in a randomly named test database and deletes that database afterward. There is no separate linter yet.
 
 `npm run start` runs the server without watchers and expects CSS to have been built. `npm run dev:server` and `npm run dev:css` are available separately; normal Compose startup runs both via `npm run dev`.
 

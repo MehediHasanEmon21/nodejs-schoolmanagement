@@ -1,7 +1,46 @@
 # Development Progress
 
-Current Phase: 3 — Application Foundation
-Status: Implementation and verification complete; Git commit blocked
+Current Phase: 4 — Authentication
+Status: READY FOR NEXT PHASE
+
+## Phase 4 completed
+
+- [x] User schema, normalized unique email, account status and last login timestamp.
+- [x] Argon2id password hashing and protected password-write paths.
+- [x] Login validation and safe invalid-credential handling.
+- [x] Persistent MongoDB sessions, secure cookie configuration and idle/absolute expiry.
+- [x] Login/session regeneration, POST logout, CSRF and shared login throttling.
+- [x] Guest/authentication middleware and protected dashboard.
+- [x] Interactive first Super Admin setup and configuration documentation.
+- [x] All nine Phase 4 action-plan checklist items verified.
+
+## Work completed from the existing partial implementation
+
+- Preserved the existing authentication MVC implementation and completed verification.
+- Fixed session-store database selection to match the active Mongoose database, including integration-test overrides.
+- Replaced deprecated Mongoose update options with `returnDocument: 'after'`.
+- Fixed the password test to verify Argon2 parameters independently of serialization order.
+- Added password-change coverage and fixed integration teardown to close HTTP servers before MongoDB.
+- Updated README setup/login instructions, [authentication guide](authentication.md), and phase checklist.
+
+## Phase 4 verification
+
+- `docker compose config --quiet`: passed.
+- `docker compose up -d --build --wait`: image built; app and MongoDB healthy.
+- `docker compose exec -T app npm run check`: 25 JavaScript files passed syntax checks.
+- `docker compose exec -T app npm run build`: Tailwind compilation passed.
+- `docker compose exec -T app npm test`: 13 passed, 0 failed.
+- `docker compose exec -T app npm run test:integration`: 1 MongoDB lifecycle test passed, 0 failed, with clean shutdown. Covers password creation/change, unique email, validation, invalid credentials, CSRF, session fixation, protected/guest routes, escaping, persisted sessions across app instances, logout, inactive accounts, both expiration limits and shared throttling.
+- Live HTTP checks: `/` and `/login` return 200; unauthenticated `/dashboard` redirects to `/login`; GET `/logout` returns 404.
+- Interactive `setup:admin` verified in a temporary database: password prompts stayed hidden, one Super Admin was created and authenticated, and the test database was removed.
+- No separate linter is configured. Unit, HTTP and MongoDB integration checks provide authentication verification; no new browser visual inspection was performed.
+- Local `.env` and generated CSS remain ignored. Git metadata now works; the earlier phase reports below describe the previous workspace state.
+
+## Phase boundary
+
+The app is running at http://localhost:3001. No Phase 4 implementation items remain. Provision your own first administrator with `docker compose exec app npm run setup:admin`; no default credentials are created. Phase 5 roles/permissions has not been started.
+
+## Earlier phase history
 
 ## Completed
 

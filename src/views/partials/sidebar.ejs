@@ -2,6 +2,9 @@
   <nav aria-label="Main navigation">
     <p class="mb-4 px-3 text-xs font-semibold tracking-widest text-slate-500 uppercase">Your school</p>
     <a href="/" class="block rounded-lg px-3 py-3 text-sm font-semibold <%= activePage === 'home' ? 'bg-teal-50 text-teal-900' : 'text-slate-600 hover:bg-slate-100' %>" <% if (activePage === 'home') { %>aria-current="page"<% } %>>Welcome</a>
+    <% if (currentUser) { %>
+      <a href="/dashboard" class="mt-1 block rounded-lg px-3 py-3 text-sm font-semibold text-teal-900" <% if (activePage === 'dashboard') { %>aria-current="page"<% } %>>Dashboard</a>
+    <% } %>
     <a href="/#about" class="mt-1 block rounded-lg px-3 py-3 text-sm text-slate-600 hover:bg-slate-100">About this space</a>
   </nav>
 </aside>

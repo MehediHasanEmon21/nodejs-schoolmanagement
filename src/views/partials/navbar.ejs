@@ -5,6 +5,13 @@
       <span>School Management</span>
     </a>
     <button type="button" class="btn btn-secondary md:hidden" data-menu-toggle aria-controls="site-menu" aria-expanded="true" hidden>Menu</button>
-    <span class="hidden text-sm text-slate-500 sm:block">A place for every school day.</span>
+    <% if (currentUser) { %>
+      <form method="post" action="/logout">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <%- include('button', { type: 'submit', label: 'Log out', variant: 'secondary' }) %>
+      </form>
+    <% } else { %>
+      <a href="/login" class="btn btn-secondary">Log in</a>
+    <% } %>
   </div>
 </header>

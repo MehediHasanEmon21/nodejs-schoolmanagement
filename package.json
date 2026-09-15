@@ -14,11 +14,16 @@
     "build": "npm run build:css",
     "build:css": "tailwindcss -i ./src/styles/app.css -o ./public/css/app.css --minify",
     "dev:css": "tailwindcss -i ./src/styles/app.css -o ./public/css/app.css --watch=always",
-    "test": "node --test"
+    "test": "node --test",
+    "setup:admin": "node --env-file=.env scripts/create-admin.js",
+    "test:integration": "node --env-file=.env --test tests/auth.integration.js"
   },
   "dependencies": {
+    "argon2": "^0.45.1",
+    "connect-mongo": "^6.0.0",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "mongoose": "^9.9.5"
   },
   "devDependencies": {

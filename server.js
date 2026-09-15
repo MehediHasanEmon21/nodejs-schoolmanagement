@@ -1,6 +1,9 @@
 import { connectDatabase, disconnectDatabase } from './src/config/database.js';
 import { logger } from './src/utils/logger.js';
-import app from './src/app.js';
+import { createApp } from './src/app.js';
+import { sessionConfig, createSessionStore } from './src/config/session.js';
+import User from './src/models/User.js';
+import LoginAttempt from './src/models/LoginAttempt.js';
 
 const port = Number(process.env.PORT ?? 3000);
 const uri = process.env.MONGODB_URI;
@@ -33,7 +36,10 @@ async function start() {
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     throw new Error('PORT must be an integer between 1 and 65535.');
   }
+  const config = sessionConfig();
   await connectDatabase(uri);
+  await Promise.all([User.init(), LoginAttempt.init()]);
+  const app = createApp({ auth: { config, store: createSessionStore(logger) } });
 
   if (stopping) return;
   server = app.listen(port, '0.0.0.0', () => {
