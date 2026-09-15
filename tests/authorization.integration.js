@@ -108,7 +108,14 @@ test('MongoDB roles, permissions and resource authorization', { skip: !process.e
       assert.equal((await guest(path)).location, '/login');
     }
     for (const role of Object.keys(users)) {
-      assert.equal((await clients[role]('/dashboard')).status, 200, role);
+      const dashboard = await clients[role]('/dashboard');
+      assert.equal(dashboard.status, 200, role);
+      assert.match(dashboard.text, /School overview/);
+      assert.match(dashboard.text, /href="\/dashboard"/);
+      if (['student', 'guardian', 'otherStudent'].includes(role)) {
+        assert.ok(!dashboard.text.includes('>Teachers<'));
+        assert.ok(!dashboard.text.includes('>Attendance<'));
+      }
       const administrator = ['admin', 'super_admin'].includes(role);
       assert.equal((await clients[role]('/test/admin')).status, administrator ? 200 : 403, role);
       assert.equal((await clients[role]('/test/role-management')).status, role === 'super_admin' ? 200 : 403, role);
@@ -169,7 +176,10 @@ test('MongoDB roles, permissions and resource authorization', { skip: !process.e
     await User.updateOne({ _id: users.admin.id }, { $set: { role: 'student' } });
     assert.equal((await clients.admin('/test/admin')).status, 403);
     await Role.updateOne({ _id: 'teacher' }, { $pull: { permissions: 'dashboard.view' } });
-    assert.equal((await clients.teacher('/dashboard')).status, 403);
+    const restrictedDashboard = await clients.teacher('/dashboard');
+    assert.equal(restrictedDashboard.status, 403);
+    assert.ok(!restrictedDashboard.text.includes('href="/dashboard"'));
+    assert.ok(!restrictedDashboard.text.includes('>Teachers<'));
     await Role.updateOne({ _id: 'super_admin' }, { $set: { status: 'inactive' } });
     assert.equal((await clients.super_admin('/dashboard')).status, 403);
     assert.equal((await clients.super_admin('/test/admin')).status, 403);

@@ -1,10 +1,13 @@
 import { roleNames } from '../config/authorization.js';
 import { resolveAuthorization, hasRole, hasPermission, canAccessResource } from '../services/authorization.service.js';
+import { getNavigation } from '../services/dashboard.service.js';
 
 const denied = (status = 403) => Object.assign(new Error('Access denied'), { status });
 
 export async function loadAuthorization(request, response, next) {
   request.authorization = await resolveAuthorization(request.user);
+  response.locals.navigation = getNavigation(request.authorization);
+  response.locals.currentRoleName = request.authorization?.role.name ?? null;
   next();
 }
 

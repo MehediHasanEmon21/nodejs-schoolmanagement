@@ -27,6 +27,3 @@ export function logout(config) {
     response.redirect(303, '/login');
   };
 }
-export function showDashboard(request, response) {
-  response.render('dashboard/index', { title: 'Dashboard', activePage: 'dashboard' });
-}

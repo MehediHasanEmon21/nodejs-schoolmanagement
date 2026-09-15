@@ -28,7 +28,7 @@ Authentication loads the active user from MongoDB. `loadAuthorization` then reso
 
 Authorization is not stored in sessions. User role changes, grant removals, disabled roles and disabled permissions affect the next request without requiring a new login. An authenticated user without permission receives HTTP 403 and can still log out. Unauthenticated callers of authorization guards redirect to `/login`.
 
-The production `/dashboard` route now requires `dashboard.view`. This phase supplies the reusable authorization foundation; school resource endpoints, role-editing screens and authorization-aware dashboard navigation remain in their own phases.
+The production `/dashboard` route requires `dashboard.view`. Phase 6 now uses the same permission service to filter [dashboard navigation](dashboard.md) on each request. School resource endpoints and role-editing screens remain in their designated phases.
 
 ### Role and permission guards
 
@@ -86,6 +86,6 @@ docker compose exec -T app npm test
 docker compose exec -T app npm run test:integration
 ```
 
-The unit/foundation suite contains 19 tests. The integration command runs the existing authentication lifecycle plus authorization integration coverage in separate random databases, then removes those databases. Authorization coverage includes stable references, unique records, repeat initialization, all five roles, direct URLs, multiple required permissions, forged identity/ownership fields, other users' resources, async assignment/link policies, explicit Super Admin bypass, business invariants, live revocation and restricted Admin access to a Super Admin-only guard.
+Phase 5 introduced 19 unit/foundation tests; Phase 6 extends this suite with dashboard tests. The integration command runs the existing authentication lifecycle plus authorization integration coverage in separate random databases, then removes those databases. Authorization coverage includes stable references, unique records, repeat initialization, all five roles, direct URLs, multiple required permissions, forged identity/ownership fields, other users' resources, async assignment/link policies, explicit Super Admin bypass, business invariants, live revocation and restricted Admin access to a Super Admin-only guard.
 
 The `/test/*` endpoints exist only inside the integration test app. They exercise resource policies against persisted users and explicit relationship fixtures; no future academic module is added to the production app.

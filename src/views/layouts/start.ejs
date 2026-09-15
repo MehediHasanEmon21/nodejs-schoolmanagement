@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="/css/app.css">
   <script src="/js/app.js" defer></script>
 </head>
-<body class="min-h-screen">
+<body class="flex min-h-screen flex-col">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-white focus:p-4">Skip to content</a>
   <%- include('../partials/navbar') %>
-  <div class="mx-auto grid max-w-7xl md:grid-cols-[220px_minmax(0,1fr)]">
+  <div class="mx-auto grid w-full max-w-7xl flex-1 md:grid-cols-[220px_minmax(0,1fr)]">
     <%- include('../partials/sidebar') %>
-    <div class="min-w-0 px-5 py-8 sm:px-8 lg:px-12 lg:py-12">
+    <div class="min-w-0 px-5 py-8 sm:px-8 lg:py-10">
       <main id="main-content" tabindex="-1">

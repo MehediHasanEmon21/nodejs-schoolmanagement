@@ -2,5 +2,8 @@
       <%- include('../partials/footer') %>
     </div>
   </div>
+  <% if (currentUser) { %>
+    <%- include('../partials/modal', { id: 'logout-dialog', title: 'Log out of your account?', description: 'You’ll need to sign in again to access your school workspace.', cancelLabel: 'Stay signed in', action: '/logout', confirmLabel: 'Log out' }) %>
+  <% } %>
 </body>
 </html>

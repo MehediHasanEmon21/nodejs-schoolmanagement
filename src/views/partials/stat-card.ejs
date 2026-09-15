@@ -1,0 +1,9 @@
+<% const available = locals.value !== undefined && locals.value !== null; %>
+<div class="panel min-w-0 p-5">
+  <div class="mb-5 flex items-center justify-between gap-2">
+    <span class="inline-flex rounded-lg bg-teal-50 p-2 text-teal-800"><%- include('icon', { name: locals.icon }) %></span>
+    <span class="text-xs font-medium text-slate-500"><%= available ? (locals.caption || 'Current total') : 'Coming soon' %></span>
+  </div>
+  <h3 class="text-sm font-medium text-slate-600"><%= label %></h3>
+  <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-900"><% if (available) { %><%= value %><% } else { %><span aria-hidden="true">—</span><span class="sr-only">Not available yet</span><% } %></p>
+</div>

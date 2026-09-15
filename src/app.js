@@ -18,6 +18,8 @@ export function createApp({ router = routes, log = logger, environment = process
   app.locals.activePage = '';
   app.locals.currentUser = null;
   app.locals.csrfToken = null;
+  app.locals.navigation = [];
+  app.locals.currentRoleName = null;
   app.use(requestContext(log));
   app.use(express.json({ limit: '100kb' }));
   app.use(express.urlencoded({ extended: false, limit: '100kb', parameterLimit: 100 }));

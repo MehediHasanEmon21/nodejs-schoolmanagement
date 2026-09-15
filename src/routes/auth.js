@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { showLogin, login, logout, showDashboard } from '../controllers/auth.controller.js';
+import { showLogin, login, logout } from '../controllers/auth.controller.js';
+import { showDashboard } from '../controllers/dashboard.controller.js';
 import { csrfToken, verifyCsrf, requireAuth, requireGuest } from '../middleware/auth.js';
 import { loginLimit } from '../middleware/login-limit.js';
 import { requirePermission } from '../middleware/authorization.js';

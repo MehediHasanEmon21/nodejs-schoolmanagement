@@ -18,4 +18,8 @@
   .field { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base; }
   .field[aria-invalid="true"] { @apply border-red-600; }
   .panel { @apply rounded-2xl border border-slate-200 bg-white; }
+  .modal { @apply fixed m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-lg overflow-y-auto text-slate-800 shadow-xl; }
+  .modal::backdrop { @apply bg-slate-950/50; }
 }
+
+body:has(dialog[open]) { overflow: hidden; }

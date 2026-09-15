@@ -2,7 +2,7 @@
 
 ## Application lifecycle
 
-`src/app.js` exports an assembled Express app plus `createApp()` for isolated HTTP tests. It sets absolute views/static paths independent of the working directory, configures EJS, installs request context and bounded JSON/form parsing, mounts routes, and ends with 404/error middleware.
+`src/app.js` exports `createApp()` for server startup and isolated HTTP tests. It sets absolute views/static paths independent of the working directory, configures EJS, installs request context and bounded JSON/form parsing, mounts routes, and ends with 404/error middleware.
 
 `server.js` validates the port, calls `connectDatabase()` from `src/config/database.js`, then listens. The database module owns the five-attempt bounded connection policy and connection-event logging. Shutdown closes HTTP before disconnecting MongoDB. A failed startup exits nonzero without printing the database URI.
 
@@ -21,6 +21,8 @@ Pages include `layouts/start` before content and `layouts/end` afterward. The la
 | `table` | `caption`, `columns` containing `key`/`label`, `rows`; optional `emptyMessage`; escaped text cells and accessible horizontal scrolling |
 | `pagination` | `page`, `totalPages`; optional `previousUrl`, `nextUrl`; absent links render disabled boundaries |
 | `breadcrumbs` | `items` containing `label` and optional `href`; last item is the current page |
+
+Phase 6 adds metric cards, empty states, icons and a native confirmation modal; see [dashboard and shared UI](dashboard.md) for their interfaces, permission-aware layout context and browser verification.
 
 Controls support text/email/password/number/date/tel/search inputs, textarea, and select options (`value`, `label`). Labels connect to IDs, errors connect through `aria-describedby`, and password values are never repopulated. Use unique IDs when a page repeats field names. Controllers supply validated values and internal application URLs; do not pass raw request objects or user-selected view names into EJS. Pagination controllers own positive page counts and filter-preserving URLs. State-changing forms will receive CSRF protection when introduced in their owning phase.
 

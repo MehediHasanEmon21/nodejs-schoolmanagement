@@ -1,0 +1,5 @@
+<div class="px-5 py-10 text-center sm:px-8">
+  <span class="mx-auto mb-4 flex w-fit rounded-full bg-slate-100 p-3 text-slate-500"><%- include('icon', { name: locals.icon || 'inbox' }) %></span>
+  <h3 class="font-semibold text-slate-900"><%= heading %></h3>
+  <% if (locals.description) { %><p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500"><%= description %></p><% } %>
+</div>

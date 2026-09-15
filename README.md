@@ -1,6 +1,6 @@
 # School Management System
 
-Node.js + Express + MongoDB with server-rendered EJS views, Tailwind CSS, and vanilla JavaScript. Phase 5 adds centralized roles, permissions and resource authorization to the session-based authentication foundation.
+Node.js + Express + MongoDB with server-rendered EJS views, Tailwind CSS, and vanilla JavaScript. Phase 6 provides a responsive dashboard, authorization-aware navigation and reusable UI components on top of session authentication and permissions.
 
 ## Requirements and startup
 
@@ -31,6 +31,8 @@ Enter the administrator name, email, and a password of 12–128 characters. Pass
 Visit `/login`, sign in, and use **Log out** to end the session. `/dashboard` requires an active account, an active role and `dashboard.view` permission. Sessions persist in MongoDB, expire after 30 minutes of inactivity or 12 hours total by default, and are invalidated when an account becomes inactive. See [authentication](docs/authentication.md) for configuration and verification details.
 
 App startup initializes five roles and eleven permission definitions without overwriting existing grants or disabled statuses. Existing Phase 4 accounts keep their role IDs and need no migration. Permissions refresh on each request. See [roles and permissions](docs/authorization.md) for default grants, middleware usage, ownership policies and the explicit Super Admin bypass rules.
+
+The dashboard shows clearly marked placeholder summaries and permission-filtered workspace entries. Future modules display “Coming soon” without linking to unavailable pages. The mobile menu and logout confirmation support keyboard access; navigation and logout also work without JavaScript. See [dashboard and shared UI](docs/dashboard.md) for component interfaces and verification.
 
 ## Development commands
 
