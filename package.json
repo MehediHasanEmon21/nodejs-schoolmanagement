@@ -16,7 +16,7 @@
     "dev:css": "tailwindcss -i ./src/styles/app.css -o ./public/css/app.css --watch=always",
     "test": "node --test",
     "setup:admin": "node --env-file=.env scripts/create-admin.js",
-    "test:integration": "node --env-file=.env --test tests/auth.integration.js"
+    "test:integration": "node --env-file=.env --test tests/*.integration.js"
   },
   "dependencies": {
     "argon2": "^0.45.1",

@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import { hashPassword } from '../utils/password.js';
+import { roleNames } from '../config/authorization.js';
+import './Role.js';
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true, maxlength: 120 },
   email: { type: String, required: true, trim: true, lowercase: true, maxlength: 254, match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, unique: true },
   password: { type: String, required: true, select: false, minlength: 12, maxlength: 128 },
-  role: { type: String, enum: ['super_admin', 'admin', 'teacher', 'student', 'guardian'], default: 'student', required: true },
+  role: { type: String, enum: roleNames, ref: 'Role', default: 'student', required: true },
   status: { type: String, enum: ['active', 'inactive'], default: 'active', required: true },
   lastLoginAt: { type: Date, default: null },
 }, { timestamps: true, toJSON: { transform(document, value) { delete value.password; return value; } } });

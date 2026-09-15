@@ -4,6 +4,7 @@ import { createApp } from './src/app.js';
 import { sessionConfig, createSessionStore } from './src/config/session.js';
 import User from './src/models/User.js';
 import LoginAttempt from './src/models/LoginAttempt.js';
+import { seedAuthorization } from './src/services/authorization.service.js';
 
 const port = Number(process.env.PORT ?? 3000);
 const uri = process.env.MONGODB_URI;
@@ -39,6 +40,7 @@ async function start() {
   const config = sessionConfig();
   await connectDatabase(uri);
   await Promise.all([User.init(), LoginAttempt.init()]);
+  await seedAuthorization();
   const app = createApp({ auth: { config, store: createSessionStore(logger) } });
 
   if (stopping) return;

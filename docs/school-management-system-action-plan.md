@@ -945,15 +945,17 @@ Super Admin may bypass normal authorization where intended.
 
 Centralized authorization system.
 
+Status: READY FOR NEXT PHASE. Five persisted roles and eleven permissions, current-request permission resolution, dashboard enforcement, resource/ownership guards and explicit Super Admin policy are implemented. Docker build, 32-file syntax check, 19 unit/foundation tests and 8 integration checks passed. See [authorization](authorization.md) and [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Roles exist
-- [ ] Permissions exist
-- [ ] Role-permission relationship works
-- [ ] Permission middleware works
-- [ ] Unauthorized access is denied
-- [ ] Ownership/resource checks work
-- [ ] Super Admin behavior is defined
+- [x] Roles exist
+- [x] Permissions exist
+- [x] Role-permission relationship works
+- [x] Permission middleware works
+- [x] Unauthorized access is denied
+- [x] Ownership/resource checks work
+- [x] Super Admin behavior is defined
 
 ---
 

@@ -1,6 +1,6 @@
 # School Management System
 
-Node.js + Express + MongoDB with server-rendered EJS views, Tailwind CSS, and vanilla JavaScript. Phase 4 adds secure session authentication and a protected dashboard to the shared application foundation.
+Node.js + Express + MongoDB with server-rendered EJS views, Tailwind CSS, and vanilla JavaScript. Phase 5 adds centralized roles, permissions and resource authorization to the session-based authentication foundation.
 
 ## Requirements and startup
 
@@ -28,7 +28,9 @@ docker compose exec app npm run setup:admin
 
 Enter the administrator name, email, and a password of 12–128 characters. Password entry and confirmation are hidden. Setup creates the first Super Admin and refuses to overwrite an existing account. There are no default credentials or public signup routes.
 
-Visit `/login`, sign in, and use **Log out** to end the session. `/dashboard` requires an active account. Sessions persist in MongoDB, expire after 30 minutes of inactivity or 12 hours total by default, and are invalidated when an account becomes inactive. See [authentication](docs/authentication.md) for configuration and verification details.
+Visit `/login`, sign in, and use **Log out** to end the session. `/dashboard` requires an active account, an active role and `dashboard.view` permission. Sessions persist in MongoDB, expire after 30 minutes of inactivity or 12 hours total by default, and are invalidated when an account becomes inactive. See [authentication](docs/authentication.md) for configuration and verification details.
+
+App startup initializes five roles and eleven permission definitions without overwriting existing grants or disabled statuses. Existing Phase 4 accounts keep their role IDs and need no migration. Permissions refresh on each request. See [roles and permissions](docs/authorization.md) for default grants, middleware usage, ownership policies and the explicit Super Admin bypass rules.
 
 ## Development commands
 
@@ -56,7 +58,7 @@ docker compose run --rm --no-deps app npm ci
 docker compose up -d --build
 ```
 
-`npm run check` checks all project JavaScript syntax. `npm run build` compiles minified Tailwind CSS. Run the build before `npm test` on a fresh checkout: the HTTP tests verify the actual compiled asset. Unit and foundation tests use Node’s built-in runner and ephemeral HTTP ports without requiring a database connection. `npm run test:integration` verifies authentication with MongoDB in a randomly named test database and deletes that database afterward. There is no separate linter yet.
+`npm run check` checks all project JavaScript syntax. `npm run build` compiles minified Tailwind CSS. Run the build before `npm test` on a fresh checkout: the HTTP tests verify the actual compiled asset. Unit and foundation tests use Node’s built-in runner and ephemeral HTTP ports without requiring a database connection. `npm run test:integration` verifies authentication and authorization with MongoDB in randomly named test databases and deletes those databases afterward. There is no separate linter yet.
 
 `npm run start` runs the server without watchers and expects CSS to have been built. `npm run dev:server` and `npm run dev:css` are available separately; normal Compose startup runs both via `npm run dev`.
 

@@ -5,6 +5,7 @@ import { requestContext } from './middleware/request-context.js';
 import { notFound, errorHandler } from './middleware/error-handler.js';
 import { createSessionMiddleware } from './config/session.js';
 import { loadAuthentication } from './middleware/auth.js';
+import { loadAuthorization } from './middleware/authorization.js';
 import { authRoutes } from './routes/auth.js';
 import { logger } from './utils/logger.js';
 
@@ -27,6 +28,7 @@ export function createApp({ router = routes, log = logger, environment = process
     app.set('trust proxy', auth.config.trustProxy);
     app.use(createSessionMiddleware(auth.config, auth.store));
     app.use(loadAuthentication(auth.config));
+    app.use(loadAuthorization);
     app.use(authRoutes(auth.config));
   }
   app.use(router);

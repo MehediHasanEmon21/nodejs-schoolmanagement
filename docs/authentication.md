@@ -27,7 +27,7 @@ Changing environment settings requires recreating the app container. Changing th
 
 ## Implementation and security
 
-- `User` stores normalized unique email, name, role, status, last login time and timestamps. Roles are a fixed enum for this phase; permission enforcement is Phase 5.
+- `User` stores normalized unique email, name, role, status, last login time and timestamps. Phase 5 now connects the existing role IDs to persisted roles and permissions; see [authorization](authorization.md).
 - Argon2id hashes passwords on document save using 64 MiB memory, three iterations and parallelism one. Query-based password changes, replacement writes, bulk writes and bulk inserts are rejected to prevent bypassing hashing. Use `document.save()` for account creation/password changes. Passwords are excluded from normal queries and JSON serialization.
 - MongoDB sessions use the same database as the Mongoose connection, including database-name overrides. Session contents contain a user ID, timestamps and CSRF metadata, never credentials.
 - Cookies use `HttpOnly`, `SameSite=Lax`, explicit expiry and production `Secure`. Server checks enforce idle and absolute expiration independently of cookie expiry and MongoDB TTL cleanup.
@@ -47,6 +47,6 @@ docker compose exec -T app npm test
 docker compose exec -T app npm run test:integration
 ```
 
-The unit/foundation suite contains 13 tests. The MongoDB integration suite exercises user uniqueness, password hashing and changes, login validation, invalid credentials, CSRF, session regeneration, guest/protected routes, escaping, logout, account deactivation, idle/absolute expiry, persistent sessions across app instances and shared throttling. It creates a randomly named database and closes HTTP servers before deleting that database and disconnecting.
+Phase 4 introduced 13 unit/foundation tests and the authentication MongoDB lifecycle test. Phase 5 extends these suites with authorization coverage. The authentication integration test exercises user uniqueness, password hashing and changes, login validation, invalid credentials, CSRF, session regeneration, guest/protected routes, escaping, logout, account deactivation, idle/absolute expiry, persistent sessions across app instances and shared throttling. It creates a randomly named database and closes HTTP servers before deleting that database and disconnecting.
 
 No separate linter is configured. Docker startup, live route responses, syntax checks, asset compilation and both test suites were verified for Phase 4. Production deployment configuration remains a later phase.

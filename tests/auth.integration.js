@@ -8,6 +8,7 @@ import { createSessionStore, sessionConfig } from '../src/config/session.js';
 import User from '../src/models/User.js';
 import LoginAttempt from '../src/models/LoginAttempt.js';
 import { verifyPassword } from '../src/utils/password.js';
+import { seedAuthorization } from '../src/services/authorization.service.js';
 
 // Each run owns a randomly named database; never read or modify school records.
 test('MongoDB authentication lifecycle, security boundaries and persistence', { skip: !process.env.MONGODB_URI }, async (t) => {
@@ -23,6 +24,7 @@ test('MongoDB authentication lifecycle, security boundaries and persistence', { 
     await mongoose.disconnect();
   });
   await Promise.all([User.init(), LoginAttempt.init()]);
+  await seedAuthorization();
   const password = 'Test-only-password-123';
   const user = await User.create({ name: '<script>Ada</script>', email: 'ADA@example.com', password, role: 'super_admin' });
   const stored = await User.findById(user.id).select('+password');

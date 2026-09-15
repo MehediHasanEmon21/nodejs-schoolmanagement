@@ -2,6 +2,7 @@ import { createInterface } from 'node:readline/promises';
 import { Writable } from 'node:stream';
 import { connectDatabase, disconnectDatabase } from '../src/config/database.js';
 import User from '../src/models/User.js';
+import { seedAuthorization } from '../src/services/authorization.service.js';
 
 let hidden = false;
 const output = new Writable({ write(chunk, encoding, callback) {
@@ -26,6 +27,7 @@ try {
   if (password !== confirmation) throw new Error('Passwords do not match.');
   await connectDatabase(process.env.MONGODB_URI);
   await User.init();
+  await seedAuthorization();
   // A deterministic ID makes concurrent first-admin setup attempts mutually exclusive.
   if (await User.exists({ role: 'super_admin' })) throw new Error('A Super Admin already exists.');
   await User.create({ _id: '000000000000000000000001', name, email, password, role: 'super_admin', status: 'active' });
