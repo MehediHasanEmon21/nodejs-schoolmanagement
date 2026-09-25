@@ -1,0 +1,23 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Fees', href: '/fees' }, { label: fee.feeType.name }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Student fee', heading: fee.feeType.name, description: fee.student.firstName + ' ' + fee.student.lastName + ' · ' + fee.academicYear.name }) %>
+  <div class="flex flex-wrap gap-2">
+    <a href="/fees/<%= fee.id %>/payments" class="btn btn-secondary">Payment history</a>
+    <% if (canManage) { %><a href="/fees/<%= fee.id %>/payments/new" class="btn btn-primary">Record payment</a><a href="/fees/<%= fee.id %>/edit" class="btn btn-secondary">Edit</a><% } %>
+  </div>
+</div>
+<section class="mt-6 grid gap-4 sm:grid-cols-3" aria-label="Fee summary">
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Amount</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.amount.toFixed(2) %></p></div>
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Paid</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.paidAmount.toFixed(2) %></p></div>
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Outstanding</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.outstanding.toFixed(2) %></p></div>
+</section>
+<section class="panel mt-6 px-5 py-6 sm:px-6" aria-labelledby="fee-details-title">
+  <h2 id="fee-details-title" class="mb-5 text-base font-semibold text-slate-900">Fee details</h2>
+  <dl class="grid gap-5 sm:grid-cols-2">
+    <div><dt class="text-xs font-semibold uppercase tracking-widest text-slate-500">Due date</dt><dd class="mt-1 text-slate-900"><%= fee.dueDate.toISOString().slice(0, 10) %></dd></div>
+    <div><dt class="text-xs font-semibold uppercase tracking-widest text-slate-500">Status</dt><dd class="mt-1 text-slate-900"><%= fee.status[0].toUpperCase() + fee.status.slice(1) %><%= summary.overdue ? ' · Overdue' : '' %></dd></div>
+    <div class="sm:col-span-2"><dt class="text-xs font-semibold uppercase tracking-widest text-slate-500">Note</dt><dd class="mt-1 text-slate-900"><%= fee.note || '-' %></dd></div>
+  </dl>
+</section>
+<%- include('../layouts/end') %>

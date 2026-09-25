@@ -1,0 +1,30 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Attendance', href: '/attendance' }, { label: attendance.date.toISOString().slice(0, 10) }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Attendance record', heading: attendance.class.name + ' - ' + attendance.section.name, description: attendance.date.toISOString().slice(0, 10) + ' attendance roster.' }) %>
+  <% if (canEdit) { %><a href="/attendance/<%= attendance.id %>/edit" class="btn btn-primary">Edit</a><% } %>
+</div>
+<section class="panel overflow-x-auto" aria-labelledby="attendance-record-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="attendance-record-title" class="px-5 py-4 text-left font-semibold text-slate-900">Recorded students</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Student</th><th scope="col" class="px-5 py-3 font-medium">Roll</th><th scope="col" class="px-5 py-3 font-medium">Status</th><th scope="col" class="px-5 py-3 font-medium">Note</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const record of attendance.records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/attendance/students/<%= record.student._id %>/history" class="hover:text-teal-800"><%= record.student.firstName %> <%= record.student.lastName %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= record.enrollment.rollNumber %></td>
+          <td class="px-5 py-4"><%= record.status[0].toUpperCase() + record.status.slice(1) %></td>
+          <td class="px-5 py-4 text-slate-600"><%= record.note || '-' %></td>
+        </tr>
+      <% } %>
+      <% if (attendance.records.length === 0) { %><tr><td colspan="4" class="px-5 py-10 text-center text-slate-500">No students were recorded.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<div class="mt-5 flex flex-wrap gap-3">
+  <a href="/attendance/classes/<%= attendance.class._id %>/summary" class="btn btn-secondary">Class summary</a>
+  <a href="/attendance" class="btn btn-secondary">All attendance</a>
+</div>
+<%- include('../layouts/end') %>

@@ -1,0 +1,46 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Academic years' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Academic setup', heading: 'Academic years', description: 'Manage school-year boundaries and choose the current working year.' }) %>
+  <a href="/academic-years/new" class="btn btn-primary">New academic year</a>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel overflow-x-auto" aria-labelledby="academic-years-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="academic-years-title" class="px-5 py-4 text-left font-semibold text-slate-900">Academic year records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr>
+        <th scope="col" class="px-5 py-3 font-medium">Name</th>
+        <th scope="col" class="px-5 py-3 font-medium">Dates</th>
+        <th scope="col" class="px-5 py-3 font-medium">Status</th>
+        <th scope="col" class="px-5 py-3 font-medium">Current</th>
+        <th scope="col" class="px-5 py-3 font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const year of academicYears) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/academic-years/<%= year._id %>" class="hover:text-teal-800"><%= year.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= year.startDate.toISOString().slice(0, 10) %> to <%= year.endDate.toISOString().slice(0, 10) %></td>
+          <td class="px-5 py-4 capitalize"><%= year.status %></td>
+          <td class="px-5 py-4"><%= year.isCurrent ? 'Current' : 'No' %></td>
+          <td class="px-5 py-4">
+            <div class="flex flex-wrap gap-2">
+              <a href="/academic-years/<%= year._id %>/edit" class="btn btn-secondary">Edit</a>
+              <% if (!year.isCurrent && year.status === 'active') { %>
+                <form method="post" action="/academic-years/<%= year._id %>/activate">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button class="btn btn-secondary" type="submit">Make current</button>
+                </form>
+              <% } %>
+            </div>
+          </td>
+        </tr>
+      <% } %>
+      <% if (academicYears.length === 0) { %>
+        <tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No academic years have been created yet.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

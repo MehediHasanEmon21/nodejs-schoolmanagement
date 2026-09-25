@@ -1,0 +1,19 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Fees', href: '/fees' }, { label: 'Fee types', href: '/fees/types' }, { label: feeType ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Fee setup', heading: feeType ? 'Edit fee type' : 'New fee type', description: 'Create reusable fee categories with default amounts.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="fee-type-form-title">
+  <h2 id="fee-type-form-title" class="mb-5 text-base font-semibold text-slate-900">Fee type details</h2>
+  <form method="post" action="<%= feeType ? '/fees/types/' + feeType.id : '/fees/types' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true }) %>
+    <%- include('../partials/form-control', { name: 'defaultAmount', type: 'number', label: 'Default amount', value: values.defaultAmount, error: errors.defaultAmount, required: true }) %>
+    <%- include('../partials/form-control', { name: 'description', type: 'textarea', label: 'Description', value: values.description, error: errors.description }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: feeType ? 'Save changes' : 'Create fee type' }) %>
+      <a href="/fees/types" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

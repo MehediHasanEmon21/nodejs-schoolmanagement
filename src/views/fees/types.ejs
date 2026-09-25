@@ -1,0 +1,18 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Fees', href: '/fees' }, { label: 'Fee types' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Fee setup', heading: 'Fee types', description: 'Reusable fee categories used when assigning student obligations.' }) %>
+  <a href="/fees/types/new" class="btn btn-primary">New fee type</a>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel overflow-x-auto" aria-labelledby="fee-types-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="fee-types-title" class="px-5 py-4 text-left font-semibold text-slate-900">Fee type records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600"><tr><th scope="col" class="px-5 py-3 font-medium">Name</th><th scope="col" class="px-5 py-3 font-medium">Default amount</th><th scope="col" class="px-5 py-3 font-medium">Status</th><th scope="col" class="px-5 py-3 font-medium">Actions</th></tr></thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const record of records) { %><tr><td class="px-5 py-4 font-medium text-slate-900"><%= record.name %></td><td class="px-5 py-4 text-slate-600"><%= record.defaultAmount.toFixed(2) %></td><td class="px-5 py-4"><%= record.status[0].toUpperCase() + record.status.slice(1) %></td><td class="px-5 py-4"><a href="/fees/types/<%= record._id %>/edit" class="btn btn-secondary">Edit</a></td></tr><% } %>
+      <% if (records.length === 0) { %><tr><td colspan="4" class="px-5 py-10 text-center text-slate-500">No fee types have been created yet.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

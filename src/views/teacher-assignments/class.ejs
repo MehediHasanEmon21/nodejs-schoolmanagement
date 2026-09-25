@@ -1,0 +1,25 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Teacher assignments', href: '/teacher-assignments' }, { label: schoolClass.name + ' teachers' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Class subject teachers', heading: schoolClass.name, description: 'Active subject teacher assignments for this class.' }) %>
+<section class="panel mt-6 overflow-x-auto" aria-labelledby="class-assignments-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="class-assignments-title" class="px-5 py-4 text-left font-semibold text-slate-900">Class subject teachers</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Subject</th><th scope="col" class="px-5 py-3 font-medium">Teacher</th><th scope="col" class="px-5 py-3 font-medium">Section</th><th scope="col" class="px-5 py-3 font-medium">Year</th><th scope="col" class="px-5 py-3 font-medium">Status</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const assignment of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/teacher-assignments/<%= assignment._id %>" class="hover:text-teal-800"><%= assignment.subject.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= assignment.teacher.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= assignment.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= assignment.academicYear.name %></td>
+          <td class="px-5 py-4 capitalize"><%= assignment.status %></td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No active teacher assignments found for this class.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../partials/pagination', { page: filters.page, totalPages, previousUrl, nextUrl }) %>
+<%- include('../layouts/end') %>

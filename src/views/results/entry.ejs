@@ -1,0 +1,44 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Results', href: '/results' }, { label: 'Marks entry' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Marks entry', heading: 'Enter marks', description: 'Choose an exam subject, then enter marks for eligible enrolled students.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: Object.keys(errors).length ? 'error' : 'success', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="marks-entry-title">
+  <h2 id="marks-entry-title" class="mb-5 text-base font-semibold text-slate-900">Exam subject</h2>
+  <form method="get" action="/results/entry" class="mb-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
+    <%- include('../partials/form-control', { name: 'exam', label: 'Exam', value: values.exam, error: errors.exam, options: [{ value: '', label: 'Choose an exam' }, ...formOptions.exams.map((exam) => ({ value: exam._id, label: exam.name + ' - ' + exam.class.name }))], required: true }) %>
+    <% const selectedExam = formOptions.exams.find((exam) => String(exam._id) === String(values.exam)); %>
+    <%- include('../partials/form-control', { name: 'subject', label: 'Subject', value: values.subject, error: errors.subject, options: [{ value: '', label: 'Choose a subject' }, ...((selectedExam?.subjects ?? []).map((item) => ({ value: item.subject._id, label: item.subject.name })))], required: true }) %>
+    <button class="btn btn-secondary" type="submit">Load students</button>
+  </form>
+  <form method="post" action="/results/entry" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="exam" value="<%= values.exam %>">
+    <input type="hidden" name="subject" value="<%= values.subject %>">
+    <% if (errors.marks) { %><p class="text-sm text-red-700"><%= errors.marks %></p><% } %>
+    <div class="overflow-x-auto rounded-md border border-slate-200" tabindex="0">
+      <table class="w-full border-collapse text-left text-sm">
+        <caption class="px-4 py-3 text-left font-semibold text-slate-900">Eligible students<% if (loaded?.subjectConfig) { %> · total <%= loaded.subjectConfig.totalMarks %>, pass <%= loaded.subjectConfig.passMarks %><% } %></caption>
+        <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+          <tr><th scope="col" class="px-4 py-3 font-medium">Student</th><th scope="col" class="px-4 py-3 font-medium">Roll</th><th scope="col" class="px-4 py-3 font-medium">Marks</th><th scope="col" class="px-4 py-3 font-medium">Note</th><th scope="col" class="px-4 py-3 font-medium">Result</th></tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% for (const enrollment of loaded?.roster ?? []) { const sid = String(enrollment.student._id); const existing = values.marks?.[sid] ?? enrollment.mark ?? {}; %>
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-900"><%= enrollment.student.firstName %> <%= enrollment.student.lastName %></td>
+              <td class="px-4 py-3 text-slate-600"><%= enrollment.rollNumber %></td>
+              <td class="px-4 py-3"><input class="field min-w-32" name="marks_<%= sid %>" type="number" min="0" max="<%= loaded.subjectConfig.totalMarks %>" step="0.01" value="<%= existing.marksObtained ?? '' %>"></td>
+              <td class="px-4 py-3"><input class="field min-w-56" name="note_<%= sid %>" maxlength="200" value="<%= existing.note ?? '' %>"></td>
+              <td class="px-4 py-3 text-slate-600"><%= enrollment.mark ? 'Saved' : 'Pending' %></td>
+            </tr>
+          <% } %>
+          <% if (!loaded || loaded.roster.length === 0) { %><tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">Load an exam subject to enter marks.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: 'Save marks', disabled: !loaded || loaded.roster.length === 0 }) %>
+      <a href="/results" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

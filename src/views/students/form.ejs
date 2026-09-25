@@ -1,0 +1,35 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Students', href: '/students' }, { label: student ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Student management', heading: student ? 'Edit student' : 'New student', description: 'Keep profile information here; enrollment history belongs in the enrollment module.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="student-form-title">
+  <h2 id="student-form-title" class="mb-5 text-base font-semibold text-slate-900">Student details</h2>
+  <form method="post" action="<%= student ? '/students/' + student.id : '/students' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'studentId', label: 'Student ID', value: values.studentId, error: errors.studentId, required: true }) %>
+      <%- include('../partials/form-control', { name: 'user', label: 'Linked account', value: values.user, error: errors.user, options: [{ value: '', label: 'No linked account' }, ...formOptions.users.map((item) => ({ value: item._id, label: item.name + ' - ' + item.email }))] }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'firstName', label: 'First name', value: values.firstName, error: errors.firstName, required: true }) %>
+      <%- include('../partials/form-control', { name: 'lastName', label: 'Last name', value: values.lastName, error: errors.lastName, required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-3">
+      <%- include('../partials/form-control', { name: 'dateOfBirth', type: 'date', label: 'Date of birth', value: values.dateOfBirth, error: errors.dateOfBirth, required: true }) %>
+      <%- include('../partials/form-control', { name: 'admissionDate', type: 'date', label: 'Admission date', value: values.admissionDate, error: errors.admissionDate, required: true }) %>
+      <%- include('../partials/form-control', { name: 'gender', label: 'Gender', value: values.gender, error: errors.gender, options: [{ value: '', label: 'Choose gender' }, { value: 'female', label: 'Female' }, { value: 'male', label: 'Male' }, { value: 'other', label: 'Other' }, { value: 'prefer_not_to_say', label: 'Prefer not to say' }], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'No class assigned' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))] }) %>
+      <%- include('../partials/form-control', { name: 'section', label: 'Section', value: values.section, error: errors.section, options: [{ value: '', label: 'No section assigned' }, ...formOptions.sections.map((item) => ({ value: item._id, label: (item.class?.name ? item.class.name + ' - ' : '') + item.name }))] }) %>
+    </div>
+    <%- include('../partials/form-control', { name: 'phone', type: 'tel', label: 'Phone', value: values.phone, error: errors.phone }) %>
+    <%- include('../partials/form-control', { name: 'address', type: 'textarea', label: 'Address', value: values.address, error: errors.address }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: student ? 'Save changes' : 'Create student' }) %>
+      <a href="<%= student ? '/students/' + student.id : '/students' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

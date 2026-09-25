@@ -1,0 +1,24 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Attendance', href: '/attendance' }, { label: student.firstName + ' history' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Student attendance', heading: student.firstName + ' ' + student.lastName, description: 'Attendance history across recorded class days.' }) %>
+<section class="panel mt-6 overflow-x-auto" aria-labelledby="student-attendance-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="student-attendance-title" class="px-5 py-4 text-left font-semibold text-slate-900">Attendance history</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Date</th><th scope="col" class="px-5 py-3 font-medium">Year</th><th scope="col" class="px-5 py-3 font-medium">Class</th><th scope="col" class="px-5 py-3 font-medium">Section</th><th scope="col" class="px-5 py-3 font-medium">Status</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const attendance of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/attendance/<%= attendance._id %>" class="hover:text-teal-800"><%= attendance.date.toISOString().slice(0, 10) %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= attendance.academicYear.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= attendance.class.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= attendance.section.name %></td>
+          <td class="px-5 py-4"><%= attendance.record.status[0].toUpperCase() + attendance.record.status.slice(1) %></td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No attendance has been recorded for this student.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

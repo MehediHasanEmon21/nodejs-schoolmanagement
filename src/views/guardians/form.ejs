@@ -1,0 +1,45 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Guardians', href: '/guardians' }, { label: guardian ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Guardian management', heading: guardian ? 'Edit guardian' : 'New guardian', description: 'Connect guardians to existing student profiles without duplicating student data.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="guardian-form-title">
+  <h2 id="guardian-form-title" class="mb-5 text-base font-semibold text-slate-900">Guardian details</h2>
+  <form method="post" action="<%= guardian ? '/guardians/' + guardian.id : '/guardians' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'guardianId', label: 'Guardian ID', value: values.guardianId, error: errors.guardianId, required: true }) %>
+      <%- include('../partials/form-control', { name: 'user', label: 'Linked account', value: values.user, error: errors.user, options: [{ value: '', label: 'No linked account' }, ...formOptions.users.map((item) => ({ value: item._id, label: item.name + ' - ' + item.email }))] }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true }) %>
+      <%- include('../partials/form-control', { name: 'relationship', label: 'Relationship', value: values.relationship, error: errors.relationship, required: true, hint: 'Example: Mother, Father, Guardian' }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'email', type: 'email', label: 'Email', value: values.email, error: errors.email }) %>
+      <%- include('../partials/form-control', { name: 'phone', type: 'tel', label: 'Phone', value: values.phone, error: errors.phone, required: true }) %>
+    </div>
+    <fieldset class="space-y-3">
+      <legend class="text-sm font-medium text-slate-800">Linked students <span aria-hidden="true">*</span></legend>
+      <% if (formOptions.students.length) { %>
+        <div class="grid gap-2 sm:grid-cols-2">
+          <% for (const student of formOptions.students) { %>
+            <label class="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700">
+              <input type="checkbox" name="students" value="<%= student._id %>" class="h-4 w-4 rounded border-slate-300 text-teal-800 focus:ring-teal-700" <% if (values.students.includes(String(student._id))) { %>checked<% } %>>
+              <span><%= student.firstName %> <%= student.lastName %> (<%= student.studentId %>)</span>
+            </label>
+          <% } %>
+        </div>
+      <% } else { %>
+        <p class="text-sm text-slate-500">Create an active student before linking guardians.</p>
+      <% } %>
+      <% if (errors.students) { %><p class="text-sm text-red-700"><%= errors.students %></p><% } %>
+    </fieldset>
+    <%- include('../partials/form-control', { name: 'address', type: 'textarea', label: 'Address', value: values.address, error: errors.address }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: guardian ? 'Save changes' : 'Create guardian' }) %>
+      <a href="<%= guardian ? '/guardians/' + guardian.id : '/guardians' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

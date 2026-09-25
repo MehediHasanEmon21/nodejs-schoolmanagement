@@ -23,8 +23,9 @@ test('navigation links only to implemented pages and hides unavailable permissio
   assert.deepEqual(getNavigation(authorization('student', ['student.view'])), []);
   const student = getNavigation(authorization('student'));
   assert.ok(student.some((item) => item.id === 'students'));
-  assert.ok(!student.some((item) => ['teachers', 'attendance'].includes(item.id)));
-  assert.deepEqual(student.filter((item) => item.href).map((item) => item.href), ['/dashboard']);
+  assert.ok(!student.some((item) => ['teachers'].includes(item.id)));
+  assert.deepEqual(student.filter((item) => item.href).map((item) => item.href), ['/dashboard', '/students', '/enrollments', '/attendance', '/exams', '/results', '/fees', '/timetable', '/notices']);
+  assert.ok(getNavigation(authorization('teacher')).some((item) => item.href === '/teacher-assignments'));
   const teacher = authorization('teacher', ['dashboard.view', 'attendance.edit']);
   assert.ok(getNavigation(teacher).some((item) => item.id === 'attendance'));
   teacher.role.status = 'inactive';
@@ -54,7 +55,15 @@ test('dashboard renders escaped account data, accessible navigation and honest e
   assert.match(html, /&lt;script&gt;Ada/);
   assert.match(html, /aria-current="page"[^>]*>[\s\S]*?Overview/);
   for (const text of ['School overview', 'Your workspace', 'School updates', 'Not available yet', 'Coming soon']) assert.ok(html.includes(text));
-  for (const path of ['/students', '/teachers', '/attendance', '/fees', '/results']) assert.ok(!html.includes(`href="${path}"`));
+  assert.ok(html.includes('href="/students"'));
+  assert.ok(html.includes('href="/teachers"'));
+  assert.ok(html.includes('href="/guardians"'));
+  assert.ok(html.includes('href="/enrollments"'));
+  assert.ok(html.includes('href="/teacher-assignments"'));
+  assert.ok(html.includes('href="/attendance"'));
+  assert.ok(html.includes('href="/fees"'));
+  assert.ok(html.includes('href="/timetable"'));
+  assert.ok(html.includes('href="/notices"'));
   assert.match(html, /data-confirm-dialog="logout-dialog"/);
   assert.match(html, /<dialog id="logout-dialog"/);
   assert.match(html, /aria-labelledby="logout-dialog-title"/);

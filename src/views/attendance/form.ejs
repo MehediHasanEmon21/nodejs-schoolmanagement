@@ -1,0 +1,57 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Attendance', href: '/attendance' }, { label: attendance ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Daily attendance', heading: attendance ? 'Edit attendance' : 'Record attendance', description: 'Choose the class context, then mark each active enrolled student.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: errors && Object.keys(errors).length ? 'error' : 'info', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="attendance-form-title">
+  <h2 id="attendance-form-title" class="mb-5 text-base font-semibold text-slate-900">Attendance details</h2>
+  <% if (!attendance) { %>
+    <form method="get" action="/attendance/new" class="mb-6 grid gap-5 lg:grid-cols-[repeat(4,minmax(0,1fr))_auto] lg:items-end">
+      <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: values.academicYear, error: errors.academicYear, options: [{ value: '', label: 'Choose an academic year' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'Choose a class' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'section', label: 'Section', value: values.section, error: errors.section, options: [{ value: '', label: 'Choose a section' }, ...formOptions.sections.map((item) => ({ value: item._id, label: (item.class?.name ? item.class.name + ' - ' : '') + item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'date', type: 'date', label: 'Date', value: values.date, error: errors.date, required: true }) %>
+      <button class="btn btn-secondary" type="submit">Load roster</button>
+    </form>
+  <% } %>
+  <form method="post" action="<%= attendance ? '/attendance/' + attendance.id : '/attendance' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="academicYear" value="<%= values.academicYear %>">
+    <input type="hidden" name="class" value="<%= values.class %>">
+    <input type="hidden" name="section" value="<%= values.section %>">
+    <input type="hidden" name="date" value="<%= values.date %>">
+    <div class="grid gap-4 sm:grid-cols-4">
+      <div><span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Academic year</span><p class="mt-1 text-slate-900"><%= formOptions.academicYears.find((item) => String(item._id) === String(values.academicYear))?.name ?? 'Not selected' %></p></div>
+      <div><span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Class</span><p class="mt-1 text-slate-900"><%= formOptions.classes.find((item) => String(item._id) === String(values.class))?.name ?? 'Not selected' %></p></div>
+      <div><span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Section</span><p class="mt-1 text-slate-900"><%= formOptions.sections.find((item) => String(item._id) === String(values.section))?.name ?? 'Not selected' %></p></div>
+      <div><span class="text-xs font-semibold uppercase tracking-widest text-slate-500">Date</span><p class="mt-1 text-slate-900"><%= values.date %></p></div>
+    </div>
+    <div class="overflow-x-auto rounded-md border border-slate-200" tabindex="0">
+      <table class="w-full border-collapse text-left text-sm">
+        <caption class="px-4 py-3 text-left font-semibold text-slate-900">Student roster</caption>
+        <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+          <tr><th scope="col" class="px-4 py-3 font-medium">Student</th><th scope="col" class="px-4 py-3 font-medium">Roll</th><th scope="col" class="px-4 py-3 font-medium">Status</th><th scope="col" class="px-4 py-3 font-medium">Note</th></tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% for (const enrollment of roster) { const sid = String(enrollment.student._id); const record = values.records?.[sid] ?? {}; %>
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-900"><%= enrollment.student.firstName %> <%= enrollment.student.lastName %></td>
+              <td class="px-4 py-3 text-slate-600"><%= enrollment.rollNumber %></td>
+              <td class="px-4 py-3">
+                <select name="status_<%= sid %>" class="input min-w-36">
+                  <% for (const status of statuses) { %><option value="<%= status %>" <%= (record.status ?? 'present') === status ? 'selected' : '' %>><%= status[0].toUpperCase() + status.slice(1) %></option><% } %>
+                </select>
+              </td>
+              <td class="px-4 py-3"><input class="input min-w-56" name="note_<%= sid %>" value="<%= record.note ?? '' %>" maxlength="200"></td>
+            </tr>
+          <% } %>
+          <% if (roster.length === 0) { %><tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">Load a class roster before saving attendance.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: attendance ? 'Save changes' : 'Record attendance', disabled: roster.length === 0 }) %>
+      <a href="<%= attendance ? '/attendance/' + attendance.id : '/attendance' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

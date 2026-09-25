@@ -1,0 +1,22 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Academic years', href: '/academic-years' }, { label: academicYear.name }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Academic year', heading: academicYear.name, description: 'Review this academic year before connecting classes, enrollments and attendance in later phases.' }) %>
+  <a href="/academic-years/<%= academicYear.id %>/edit" class="btn btn-primary">Edit</a>
+</div>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="academic-year-title">
+  <h2 id="academic-year-title" class="mb-5 text-base font-semibold text-slate-900">Year details</h2>
+  <dl class="grid gap-5 sm:grid-cols-2">
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Start date</dt><dd class="mt-1 text-slate-900"><%= academicYear.startDate.toISOString().slice(0, 10) %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">End date</dt><dd class="mt-1 text-slate-900"><%= academicYear.endDate.toISOString().slice(0, 10) %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Status</dt><dd class="mt-1 capitalize text-slate-900"><%= academicYear.status %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Current year</dt><dd class="mt-1 text-slate-900"><%= academicYear.isCurrent ? 'Yes' : 'No' %></dd></div>
+  </dl>
+  <% if (!academicYear.isCurrent && academicYear.status === 'active') { %>
+    <form method="post" action="/academic-years/<%= academicYear.id %>/activate" class="mt-6">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-secondary" type="submit">Make current</button>
+    </form>
+  <% } %>
+</section>
+<%- include('../layouts/end') %>

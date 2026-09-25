@@ -1,0 +1,26 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Results', href: '/results' }, { label: exam.class.name + ' result' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Class result', heading: exam.class.name, description: exam.name + ' · ' + exam.academicYear.name }) %>
+<section class="panel mt-6 overflow-x-auto" aria-labelledby="class-result-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="class-result-title" class="px-5 py-4 text-left font-semibold text-slate-900">Class results</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Student</th><th scope="col" class="px-5 py-3 font-medium">Section</th><th scope="col" class="px-5 py-3 font-medium">Roll</th><th scope="col" class="px-5 py-3 font-medium">Marks</th><th scope="col" class="px-5 py-3 font-medium">Grade</th><th scope="col" class="px-5 py-3 font-medium">Result</th><th scope="col" class="px-5 py-3 font-medium">Actions</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const row of rows) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><%= row.enrollment.student.firstName %> <%= row.enrollment.student.lastName %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.enrollment.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.enrollment.rollNumber %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.summary.marksObtained %>/<%= row.summary.totalMarks %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.summary.grade %></td>
+          <td class="px-5 py-4"><%= row.summary.passed ? 'Pass' : 'Fail' %></td>
+          <td class="px-5 py-4"><a href="/results/exams/<%= exam._id %>/students/<%= row.enrollment.student._id %>" class="btn btn-secondary">View</a></td>
+        </tr>
+      <% } %>
+      <% if (rows.length === 0) { %><tr><td colspan="7" class="px-5 py-10 text-center text-slate-500">No eligible students found for this exam.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

@@ -1,0 +1,55 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Enrollments' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Student enrollment', heading: 'Enrollments', description: 'Connect students to an academic year, class and section while preserving enrollment history.' }) %>
+  <% if (canManage) { %><a href="/enrollments/new" class="btn btn-primary">New enrollment</a><% } %>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel mb-5 px-5 py-5 sm:px-6" aria-labelledby="enrollment-filters-title">
+  <h2 id="enrollment-filters-title" class="mb-4 text-base font-semibold text-slate-900">Find enrollments</h2>
+  <form method="get" action="/enrollments" class="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))_auto] lg:items-end">
+    <%- include('../partials/form-control', { name: 'q', type: 'search', label: 'Search', value: filters.q, hint: 'Student name, ID or roll number' }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: filters.status, options: [{ value: '', label: 'All statuses' }, { value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }, { value: 'completed', label: 'Completed' }, { value: 'transferred', label: 'Transferred' }] }) %>
+    <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: filters.academicYear, options: [{ value: '', label: 'All years' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'class', label: 'Class', value: filters.class, options: [{ value: '', label: 'All classes' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'sort', label: 'Sort', value: filters.sort, options: [{ value: 'enrollmentDate', label: 'Enrollment date' }, { value: 'rollNumber', label: 'Roll number' }, { value: 'status', label: 'Status' }] }) %>
+    <button class="btn btn-secondary" type="submit">Apply</button>
+  </form>
+</section>
+<section class="panel overflow-x-auto" aria-labelledby="enrollments-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="enrollments-title" class="px-5 py-4 text-left font-semibold text-slate-900">Enrollment records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr>
+        <th scope="col" class="px-5 py-3 font-medium">Student</th>
+        <th scope="col" class="px-5 py-3 font-medium">Year</th>
+        <th scope="col" class="px-5 py-3 font-medium">Class</th>
+        <th scope="col" class="px-5 py-3 font-medium">Section</th>
+        <th scope="col" class="px-5 py-3 font-medium">Roll</th>
+        <th scope="col" class="px-5 py-3 font-medium">Status</th>
+        <th scope="col" class="px-5 py-3 font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const enrollment of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/enrollments/<%= enrollment._id %>" class="hover:text-teal-800"><%= enrollment.student.firstName %> <%= enrollment.student.lastName %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.academicYear.name %></td>
+          <td class="px-5 py-4 text-slate-600"><a href="/enrollments/classes/<%= enrollment.class._id %>/students" class="hover:text-teal-800"><%= enrollment.class.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.rollNumber %></td>
+          <td class="px-5 py-4 capitalize"><%= enrollment.status %></td>
+          <td class="px-5 py-4">
+            <div class="flex flex-wrap gap-2">
+              <a href="/enrollments/<%= enrollment._id %>" class="btn btn-secondary">View</a>
+              <% if (canManage) { %><a href="/enrollments/<%= enrollment._id %>/edit" class="btn btn-secondary">Edit</a><% } %>
+            </div>
+          </td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="7" class="px-5 py-10 text-center text-slate-500">No enrollments match the current filters.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../partials/pagination', { page: filters.page, totalPages, previousUrl, nextUrl }) %>
+<%- include('../layouts/end') %>

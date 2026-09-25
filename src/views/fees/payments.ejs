@@ -1,0 +1,27 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Fees', href: '/fees' }, { label: fee.feeType.name, href: '/fees/' + fee.id }, { label: 'Payments' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Payment history', heading: fee.feeType.name, description: fee.student.firstName + ' ' + fee.student.lastName + ' · outstanding ' + summary.outstanding.toFixed(2) }) %>
+  <% if (currentRoleName === 'Admin' || currentRoleName === 'Super Admin') { %><a href="/fees/<%= fee.id %>/payments/new" class="btn btn-primary">Record payment</a><% } %>
+</div>
+<section class="panel overflow-x-auto" aria-labelledby="payments-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="payments-title" class="px-5 py-4 text-left font-semibold text-slate-900">Payment records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Date</th><th scope="col" class="px-5 py-3 font-medium">Amount</th><th scope="col" class="px-5 py-3 font-medium">Method</th><th scope="col" class="px-5 py-3 font-medium">Reference</th><th scope="col" class="px-5 py-3 font-medium">Recorded by</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const payment of payments) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><%= payment.paidAt.toISOString().slice(0, 10) %></td>
+          <td class="px-5 py-4 text-slate-600"><%= payment.amount.toFixed(2) %></td>
+          <td class="px-5 py-4 text-slate-600"><%= payment.method.replace('_', ' ') %></td>
+          <td class="px-5 py-4 text-slate-600"><%= payment.referenceNumber || '-' %></td>
+          <td class="px-5 py-4 text-slate-600"><%= payment.recordedBy?.name ?? '-' %></td>
+        </tr>
+      <% } %>
+      <% if (payments.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No payments have been recorded for this fee.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

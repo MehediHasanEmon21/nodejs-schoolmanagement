@@ -1,0 +1,56 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Teacher assignments' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Academic responsibilities', heading: 'Teacher assignments', description: 'Connect teachers to an academic year, class, section and subject for scoped academic work.' }) %>
+  <% if (canManage) { %><a href="/teacher-assignments/new" class="btn btn-primary">New assignment</a><% } %>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel mb-5 px-5 py-5 sm:px-6" aria-labelledby="assignment-filters-title">
+  <h2 id="assignment-filters-title" class="mb-4 text-base font-semibold text-slate-900">Find assignments</h2>
+  <form method="get" action="/teacher-assignments" class="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_repeat(5,minmax(0,1fr))_auto] lg:items-end">
+    <%- include('../partials/form-control', { name: 'q', type: 'search', label: 'Search', value: filters.q, hint: 'Teacher, ID, email, subject or code' }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: filters.status, options: [{ value: '', label: 'All statuses' }, { value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }] }) %>
+    <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: filters.academicYear, options: [{ value: '', label: 'All years' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'class', label: 'Class', value: filters.class, options: [{ value: '', label: 'All classes' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'subject', label: 'Subject', value: filters.subject, options: [{ value: '', label: 'All subjects' }, ...formOptions.subjects.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'sort', label: 'Sort', value: filters.sort, options: [{ value: 'recent', label: 'Recently created' }, { value: 'teacher', label: 'Teacher' }, { value: 'subject', label: 'Subject' }, { value: 'status', label: 'Status' }] }) %>
+    <button class="btn btn-secondary" type="submit">Apply</button>
+  </form>
+</section>
+<section class="panel overflow-x-auto" aria-labelledby="assignments-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="assignments-title" class="px-5 py-4 text-left font-semibold text-slate-900">Assignment records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr>
+        <th scope="col" class="px-5 py-3 font-medium">Teacher</th>
+        <th scope="col" class="px-5 py-3 font-medium">Year</th>
+        <th scope="col" class="px-5 py-3 font-medium">Class</th>
+        <th scope="col" class="px-5 py-3 font-medium">Section</th>
+        <th scope="col" class="px-5 py-3 font-medium">Subject</th>
+        <th scope="col" class="px-5 py-3 font-medium">Status</th>
+        <th scope="col" class="px-5 py-3 font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const assignment of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/teacher-assignments/teachers/<%= assignment.teacher._id %>" class="hover:text-teal-800"><%= assignment.teacher.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= assignment.academicYear.name %></td>
+          <td class="px-5 py-4 text-slate-600"><a href="/teacher-assignments/classes/<%= assignment.class._id %>" class="hover:text-teal-800"><%= assignment.class.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= assignment.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= assignment.subject.name %></td>
+          <td class="px-5 py-4 capitalize"><%= assignment.status %></td>
+          <td class="px-5 py-4">
+            <div class="flex flex-wrap gap-2">
+              <a href="/teacher-assignments/<%= assignment._id %>" class="btn btn-secondary">View</a>
+              <% if (canManage) { %><a href="/teacher-assignments/<%= assignment._id %>/edit" class="btn btn-secondary">Edit</a><% } %>
+            </div>
+          </td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="7" class="px-5 py-10 text-center text-slate-500">No teacher assignments match the current filters.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../partials/pagination', { page: filters.page, totalPages, previousUrl, nextUrl }) %>
+<%- include('../layouts/end') %>

@@ -1,0 +1,30 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Attendance', href: '/attendance' }, { label: schoolClass.name + ' summary' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Class attendance', heading: schoolClass.name, description: 'Recorded attendance days and status totals for this class.' }) %>
+<section class="mt-6 grid gap-4 sm:grid-cols-4" aria-label="Attendance totals">
+  <% for (const status of ['present', 'absent', 'late', 'excused']) { %>
+    <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500"><%= status[0].toUpperCase() + status.slice(1) %></p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= totals[status] %></p></div>
+  <% } %>
+</section>
+<section class="panel mt-6 overflow-x-auto" aria-labelledby="class-attendance-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="class-attendance-title" class="px-5 py-4 text-left font-semibold text-slate-900">Attendance days</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Date</th><th scope="col" class="px-5 py-3 font-medium">Year</th><th scope="col" class="px-5 py-3 font-medium">Section</th><th scope="col" class="px-5 py-3 font-medium">Students</th><th scope="col" class="px-5 py-3 font-medium">Actions</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const attendance of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><%= attendance.date.toISOString().slice(0, 10) %></td>
+          <td class="px-5 py-4 text-slate-600"><%= attendance.academicYear.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= attendance.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= attendance.records.length %></td>
+          <td class="px-5 py-4"><a href="/attendance/<%= attendance._id %>" class="btn btn-secondary">View</a></td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No attendance records found for this class.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../partials/pagination', { page: filters.page, totalPages, previousUrl, nextUrl }) %>
+<%- include('../layouts/end') %>

@@ -1,0 +1,18 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Notices', href: '/notices' }, { label: notice.title }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Notice', heading: notice.title, description: notice.audience + (notice.class ? ' · ' + notice.class.name : '') + (notice.section ? ' / ' + notice.section.name : '') }) %>
+  <% if (canManage) { %><a href="/notices/<%= notice.id %>/edit" class="btn btn-primary">Edit</a><% } %>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="notice-title">
+  <h2 id="notice-title" class="sr-only"><%= notice.title %></h2>
+  <dl class="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div><dt class="text-sm text-slate-500">Audience</dt><dd class="font-medium text-slate-900"><%= notice.audience %></dd></div>
+    <div><dt class="text-sm text-slate-500">Status</dt><dd class="font-medium capitalize text-slate-900"><%= notice.status %></dd></div>
+    <div><dt class="text-sm text-slate-500">Visible from</dt><dd class="font-medium text-slate-900"><%= notice.visibleFrom ? notice.visibleFrom.toISOString().slice(0, 10) : 'Now' %></dd></div>
+    <div><dt class="text-sm text-slate-500">Visible until</dt><dd class="font-medium text-slate-900"><%= notice.visibleUntil ? notice.visibleUntil.toISOString().slice(0, 10) : 'Open' %></dd></div>
+  </dl>
+  <div class="whitespace-pre-line text-sm leading-6 text-slate-700"><%= notice.body %></div>
+</section>
+<%- include('../layouts/end') %>

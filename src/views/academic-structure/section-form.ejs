@@ -1,0 +1,18 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Sections', href: '/sections' }, { label: record ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Academic structure', heading: record ? 'Edit section' : 'New section', description: 'Section names are unique inside each class.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="section-form-title">
+  <h2 id="section-form-title" class="mb-5 text-base font-semibold text-slate-900">Section details</h2>
+  <form method="post" action="<%= record ? '/sections/' + record.id : '/sections' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true, hint: 'Example: Section A' }) %>
+    <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'Choose a class' }, ...classes.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: record ? 'Save changes' : 'Create section' }) %>
+      <a href="/sections" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

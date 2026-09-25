@@ -1,0 +1,22 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Fees', href: '/fees' }, { label: fee.feeType.name, href: '/fees/' + fee.id }, { label: 'Record payment' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Payment', heading: 'Record payment', description: fee.student.firstName + ' ' + fee.student.lastName + ' · outstanding ' + summary.outstanding.toFixed(2) }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="payment-form-title">
+  <h2 id="payment-form-title" class="mb-5 text-base font-semibold text-slate-900">Payment details</h2>
+  <form method="post" action="/fees/<%= fee.id %>/payments" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-3">
+      <%- include('../partials/form-control', { name: 'amount', type: 'number', label: 'Amount', value: values.amount, error: errors.amount, required: true }) %>
+      <%- include('../partials/form-control', { name: 'paidAt', type: 'date', label: 'Payment date', value: values.paidAt, error: errors.paidAt, required: true }) %>
+      <%- include('../partials/form-control', { name: 'method', label: 'Method', value: values.method, error: errors.method, options: [{ value: 'cash', label: 'Cash' }, { value: 'bank_transfer', label: 'Bank transfer' }, { value: 'card', label: 'Card' }, { value: 'mobile_banking', label: 'Mobile banking' }, { value: 'other', label: 'Other' }], required: true }) %>
+    </div>
+    <%- include('../partials/form-control', { name: 'referenceNumber', label: 'Reference number', value: values.referenceNumber, error: errors.referenceNumber }) %>
+    <%- include('../partials/form-control', { name: 'note', type: 'textarea', label: 'Note', value: values.note, error: errors.note }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: 'Record payment' }) %>
+      <a href="/fees/<%= fee.id %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

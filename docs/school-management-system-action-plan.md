@@ -1068,16 +1068,18 @@ Business rules:
 
 Academic years can be managed from the dashboard.
 
+Status: READY FOR NEXT PHASE. Academic year management is implemented with list/create/edit/view screens, current-year activation, validation, authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] List
-- [ ] Create
-- [ ] Edit
-- [ ] View
-- [ ] Activate/current-year logic
-- [ ] Validation
-- [ ] Authorization
-- [ ] Tests
+- [x] List
+- [x] Create
+- [x] Edit
+- [x] View
+- [x] Activate/current-year logic
+- [x] Validation
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1145,15 +1147,17 @@ Support subject assignment to appropriate class structures.
 
 Reusable academic structure.
 
+Status: READY FOR NEXT PHASE. Class, section and subject management is implemented with relationships, duplicate prevention, authorization, validation and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Class CRUD works
-- [ ] Section CRUD works
-- [ ] Subject CRUD works
-- [ ] Relationships are correct
-- [ ] Duplicate data is prevented
-- [ ] Authorization works
-- [ ] Validation works
+- [x] Class CRUD works
+- [x] Section CRUD works
+- [x] Subject CRUD works
+- [x] Relationships are correct
+- [x] Duplicate data is prevented
+- [x] Authorization works
+- [x] Validation works
 
 ---
 
@@ -1219,19 +1223,21 @@ Guardian → linked students only
 
 Complete student management module.
 
+Status: READY FOR NEXT PHASE. Student profiles are implemented with scoped CRUD, activate/deactivate, search, filters, sorting, pagination, validation, authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Student model
-- [ ] Create
-- [ ] List
-- [ ] View
-- [ ] Edit
-- [ ] Search
-- [ ] Filter
-- [ ] Pagination
-- [ ] Authorization
-- [ ] Validation
-- [ ] Tests
+- [x] Student model
+- [x] Create
+- [x] List
+- [x] View
+- [x] Edit
+- [x] Search
+- [x] Filter
+- [x] Pagination
+- [x] Authorization
+- [x] Validation
+- [x] Tests
 
 ---
 
@@ -1274,16 +1280,18 @@ Do not mix teacher assignment rules directly into basic teacher CRUD.
 
 Complete teacher management.
 
+Status: READY FOR NEXT PHASE. Teacher profiles are implemented with CRUD, status management, search, filters, sorting, pagination, validation, authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Teacher model
-- [ ] CRUD
-- [ ] Search
-- [ ] Filtering
-- [ ] Pagination
-- [ ] Authorization
-- [ ] Validation
-- [ ] Tests
+- [x] Teacher model
+- [x] CRUD
+- [x] Search
+- [x] Filtering
+- [x] Pagination
+- [x] Authorization
+- [x] Validation
+- [x] Tests
 
 ---
 
@@ -1317,13 +1325,16 @@ Implement:
 
 Guardian relationships work without duplicating unnecessary guardian data.
 
+Status: READY FOR NEXT PHASE. Guardian profiles are implemented with CRUD, linked students, multiple-student support, scoped authorization, validation and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Guardian CRUD
-- [ ] Student relationships work
-- [ ] Multiple students per guardian supported
-- [ ] Authorization works
-- [ ] Validation works
+- [x] Guardian CRUD
+- [x] Student relationships work
+- [x] Multiple students per guardian supported
+- [x] Authorization works
+- [x] Validation works
+- [x] Tests
 
 ---
 
@@ -1378,16 +1389,18 @@ A compound unique index may be useful depending on the final schema.
 
 Students can be enrolled safely into academic structures.
 
+Status: READY FOR NEXT PHASE. Student enrollment is implemented with active duplicate prevention, academic relationship validation, class student lists, student enrollment history, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Enrollment model
-- [ ] Enrollment creation
-- [ ] Duplicate prevention
-- [ ] Enrollment history
-- [ ] Class student listing
-- [ ] Validation
-- [ ] Authorization
-- [ ] Tests
+- [x] Enrollment model
+- [x] Enrollment creation
+- [x] Duplicate prevention
+- [x] Enrollment history
+- [x] Class student listing
+- [x] Validation
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1441,16 +1454,18 @@ NO → Deny
 
 Teacher academic responsibilities are centrally defined.
 
+Status: READY FOR NEXT PHASE. Teacher assignments are implemented with the assignment model, create/edit flows, active duplicate prevention, teacher assignment history, class subject teacher views, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Assignment model
-- [ ] Create assignment
-- [ ] Edit assignment
-- [ ] Duplicate checks
-- [ ] Teacher assignment view
-- [ ] Class assignment view
-- [ ] Authorization
-- [ ] Tests
+- [x] Assignment model
+- [x] Create assignment
+- [x] Edit assignment
+- [x] Duplicate checks
+- [x] Teacher assignment view
+- [x] Class assignment view
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1502,16 +1517,18 @@ Excused
 
 Reliable daily attendance management.
 
+Status: READY FOR NEXT PHASE. Attendance is implemented with daily class/section records, roster loading from active enrollments, duplicate prevention, updates, student history, class summaries, teacher-assignment authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Attendance model
-- [ ] Daily attendance entry
-- [ ] Duplicate prevention
-- [ ] Attendance update
-- [ ] Student history
-- [ ] Class summary
-- [ ] Authorization
-- [ ] Tests
+- [x] Attendance model
+- [x] Daily attendance entry
+- [x] Duplicate prevention
+- [x] Attendance update
+- [x] Student history
+- [x] Class summary
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1545,14 +1562,16 @@ Exam
 
 Exam definitions ready for marks entry.
 
+Status: READY FOR NEXT PHASE. Exam definitions are implemented with CRUD, academic year/class relationships, per-subject mark setup, schedule validation, authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Exam model
-- [ ] CRUD
-- [ ] Subject setup
-- [ ] Validation
-- [ ] Authorization
-- [ ] Tests
+- [x] Exam model
+- [x] CRUD
+- [x] Subject setup
+- [x] Validation
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1597,16 +1616,18 @@ Calculated Result
 
 Complete exam result workflow.
 
+Status: READY FOR NEXT PHASE. Marks and results are implemented with duplicate-safe marks, eligible student loading, mark entry/editing, validation, service-layer result calculation, student result pages, class result pages, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Marks model
-- [ ] Entry form
-- [ ] Duplicate prevention
-- [ ] Result calculation
-- [ ] Student result
-- [ ] Class result
-- [ ] Authorization
-- [ ] Tests
+- [x] Marks model
+- [x] Entry form
+- [x] Duplicate prevention
+- [x] Result calculation
+- [x] Student result
+- [x] Class result
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1639,15 +1660,17 @@ Library Fee
 
 The system knows what each student owes.
 
+Status: READY FOR NEXT PHASE. Fees are implemented with fee types, student fee assignments, due dates, outstanding balance calculation, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Fee model
-- [ ] Fee types
-- [ ] Student fee assignment
-- [ ] Due dates
-- [ ] Outstanding calculation
-- [ ] Authorization
-- [ ] Tests
+- [x] Fee model
+- [x] Fee types
+- [x] Student fee assignment
+- [x] Due dates
+- [x] Outstanding calculation
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1682,16 +1705,18 @@ Outstanding: 3,000
 
 Reliable fee payment tracking.
 
+Status: READY FOR NEXT PHASE. Payments are implemented with separate payment records, partial payment support, reference numbers, payment history, outstanding balance updates, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Payment model
-- [ ] Payment creation
-- [ ] Partial payment support
-- [ ] Outstanding balance
-- [ ] Payment history
-- [ ] Validation
-- [ ] Authorization
-- [ ] Tests
+- [x] Payment model
+- [x] Payment creation
+- [x] Partial payment support
+- [x] Outstanding balance
+- [x] Payment history
+- [x] Validation
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1727,15 +1752,17 @@ room
 
 Validated weekly academic timetable.
 
+Status: READY FOR NEXT PHASE. Timetables are implemented with weekly display, create/edit/detail screens, teacher assignment validation, class and teacher conflict prevention, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Timetable model
-- [ ] CRUD
-- [ ] Weekly view
-- [ ] Teacher conflict prevention
-- [ ] Class conflict prevention
-- [ ] Authorization
-- [ ] Tests
+- [x] Timetable model
+- [x] CRUD
+- [x] Weekly view
+- [x] Teacher conflict prevention
+- [x] Class conflict prevention
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1771,15 +1798,17 @@ Specific Section
 
 Role- and class-aware announcement system.
 
+Status: READY FOR NEXT PHASE. Notices are implemented with create/edit screens, publish status, audience targeting, date-based visibility, scoped authorization and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Notice model
-- [ ] Create/edit
-- [ ] Audience targeting
-- [ ] Publish status
-- [ ] Visibility rules
-- [ ] Authorization
-- [ ] Tests
+- [x] Notice model
+- [x] Create/edit
+- [x] Audience targeting
+- [x] Publish status
+- [x] Visibility rules
+- [x] Authorization
+- [x] Tests
 
 ---
 
@@ -1814,15 +1843,17 @@ Avoid building reports before the underlying source modules are stable.
 
 Operational reports for school administrators.
 
+Status: READY FOR NEXT PHASE. Reports are implemented with admin-only printable student, attendance, result and fee reports, filters, date ranges where relevant, lean/populated queries and tests. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Student report
-- [ ] Attendance report
-- [ ] Result report
-- [ ] Fee report
-- [ ] Filters
-- [ ] Query optimization
-- [ ] Authorization
+- [x] Student report
+- [x] Attendance report
+- [x] Result report
+- [x] Fee report
+- [x] Filters
+- [x] Query optimization
+- [x] Authorization
 
 ---
 
@@ -1888,17 +1919,19 @@ Never expose:
 
 Security review completed before production preparation.
 
+Status: READY FOR NEXT PHASE. Security hardening is implemented with reviewed session and CSRF behavior, stricter request-data rejection, safe error handling, secret checks, authorization coverage, rate limiting and explicit browser security headers. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Session security reviewed
-- [ ] CSRF protection
-- [ ] XSS protection
-- [ ] NoSQL injection protection
-- [ ] Rate limiting
-- [ ] Authorization audit
-- [ ] Secret management
-- [ ] Error exposure audit
-- [ ] Security headers
+- [x] Session security reviewed
+- [x] CSRF protection
+- [x] XSS protection
+- [x] NoSQL injection protection
+- [x] Rate limiting
+- [x] Authorization audit
+- [x] Secret management
+- [x] Error exposure audit
+- [x] Security headers
 
 ---
 
@@ -1945,15 +1978,17 @@ Roles + permissions + ownership
 
 Critical workflows have automated coverage.
 
+Status: READY FOR NEXT PHASE. Testing is consolidated with explicit unit, integration, critical workflow and all-test scripts, plus database constraint coverage for critical duplicate protection. See [development progress](development-progress.md).
+
 ## Completion Checklist
 
-- [ ] Test configuration
-- [ ] Unit tests
-- [ ] Integration tests
-- [ ] Authentication tests
-- [ ] Authorization tests
-- [ ] Database constraint tests
-- [ ] Critical workflow tests
+- [x] Test configuration
+- [x] Unit tests
+- [x] Integration tests
+- [x] Authentication tests
+- [x] Authorization tests
+- [x] Database constraint tests
+- [x] Critical workflow tests
 
 ---
 
@@ -1983,14 +2018,16 @@ Review:
 
 Database/query design optimized for realistic usage.
 
+Status: READY FOR NEXT PHASE. Performance and database optimization is implemented with common-query indexes, slimmer report queries, bounded report option reads, pagination review and regression tests. See [development progress](development-progress.md) and [performance database review](performance-database-review.md).
+
 ## Completion Checklist
 
-- [ ] Common queries analyzed
-- [ ] Indexes reviewed
-- [ ] Pagination optimized
-- [ ] Reports optimized
-- [ ] Dashboard optimized
-- [ ] Unnecessary queries removed
+- [x] Common queries analyzed
+- [x] Indexes reviewed
+- [x] Pagination optimized
+- [x] Reports optimized
+- [x] Dashboard optimized
+- [x] Unnecessary queries removed
 
 ---
 
@@ -2026,17 +2063,85 @@ Do not blindly reuse development Docker configuration in production.
 
 Production deployment checklist and configuration strategy.
 
+Status: READY FOR NEXT PHASE. Production readiness is implemented with a production Dockerfile, production Compose template, production environment example, health endpoint, production deployment guide and verification tests. See [development progress](development-progress.md) and [production readiness](production-readiness.md).
+
 ## Completion Checklist
 
-- [ ] Production environment strategy
-- [ ] Production Docker strategy
-- [ ] HTTPS strategy
-- [ ] Reverse proxy strategy
-- [ ] Health checks
-- [ ] Backup strategy
-- [ ] Logging strategy
-- [ ] Session persistence strategy
-- [ ] Deployment/rollback strategy
+- [x] Production environment strategy
+- [x] Production Docker strategy
+- [x] HTTPS strategy
+- [x] Reverse proxy strategy
+- [x] Health checks
+- [x] Backup strategy
+- [x] Logging strategy
+- [x] Session persistence strategy
+- [x] Deployment/rollback strategy
+
+---
+
+# Phase 26 — Demo Seed Data
+
+## Goal
+
+Provide safe, repeatable seed data so a new reviewer can sign in and walk through the complete school-management flow without manually creating every record.
+
+## Tasks
+
+Implement a demo data seeding workflow for:
+
+- Admin / staff demo users
+- Academic year
+- Classes
+- Sections
+- Subjects
+- Teachers
+- Students
+- Guardians
+- Enrollments
+- Teacher / class / subject assignments
+- Attendance records
+- Exams
+- Marks and results
+- Fee types
+- Student fees
+- Payments
+- Timetable entries
+- Notices
+
+The seed workflow must be explicit and safe:
+
+- Do not run demo seeding automatically in production startup.
+- Do not overwrite real user data.
+- Make the seed command repeatable / idempotent where practical.
+- Use obvious demo credentials only for local/demo environments.
+- Document all demo login credentials and walkthrough coverage.
+- Keep seeded data realistic enough to exercise filters, reports, dashboards and common CRUD screens.
+- Include a clear cleanup or reset strategy for local demo data.
+
+## Deliverable
+
+A documented seed command and complete demo dataset that lets a user exercise the full application flow from login through reports.
+
+Status: READY FOR NEXT PHASE. Demo seed data is implemented with an explicit npm command, guarded production behavior, repeatable demo reset/reseed logic, documented credentials, cleanup guidance and automated verification. See [development progress](development-progress.md) and [demo seed data](demo-seed-data.md).
+
+## Completion Checklist
+
+- [x] Seed command added
+- [x] Demo users created with documented credentials
+- [x] Academic structure seeded
+- [x] Student / guardian / teacher data seeded
+- [x] Enrollment flow data seeded
+- [x] Teacher assignment data seeded
+- [x] Attendance data seeded
+- [x] Exam / marks / result data seeded
+- [x] Fee and payment data seeded
+- [x] Timetable data seeded
+- [x] Notice data seeded
+- [x] Reports have meaningful seeded data
+- [x] Seeder is repeatable or safely guarded
+- [x] Seeder does not run automatically in production
+- [x] Cleanup / reset strategy documented
+- [x] Automated verification added where appropriate
 
 ---
 
@@ -2094,6 +2199,8 @@ Phase 23  Testing
 Phase 24  Performance Optimization
    ↓
 Phase 25  Production Readiness
+   ↓
+Phase 26  Demo Seed Data
 ```
 
 ---

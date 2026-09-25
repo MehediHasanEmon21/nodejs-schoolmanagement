@@ -1,0 +1,23 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Enrollments', href: '/enrollments' }, { label: enrollment.student.firstName + ' ' + enrollment.student.lastName }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Enrollment', heading: enrollment.student.firstName + ' ' + enrollment.student.lastName, description: 'Academic placement details for this enrollment.' }) %>
+  <% if (canManage) { %><a href="/enrollments/<%= enrollment.id %>/edit" class="btn btn-primary">Edit</a><% } %>
+</div>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="enrollment-title">
+  <h2 id="enrollment-title" class="mb-5 text-base font-semibold text-slate-900">Enrollment details</h2>
+  <dl class="grid gap-5 sm:grid-cols-2">
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Student ID</dt><dd class="mt-1 text-slate-900"><%= enrollment.student.studentId %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Academic year</dt><dd class="mt-1 text-slate-900"><%= enrollment.academicYear.name %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Class</dt><dd class="mt-1 text-slate-900"><%= enrollment.class.name %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Section</dt><dd class="mt-1 text-slate-900"><%= enrollment.section.name %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Roll number</dt><dd class="mt-1 text-slate-900"><%= enrollment.rollNumber %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Enrollment date</dt><dd class="mt-1 text-slate-900"><%= enrollment.enrollmentDate.toISOString().slice(0, 10) %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Status</dt><dd class="mt-1 capitalize text-slate-900"><%= enrollment.status %></dd></div>
+  </dl>
+  <div class="mt-6 flex flex-wrap gap-3">
+    <a href="/enrollments/students/<%= enrollment.student._id %>/history" class="btn btn-secondary">Enrollment history</a>
+    <a href="/enrollments/classes/<%= enrollment.class._id %>/students" class="btn btn-secondary">Class students</a>
+  </div>
+</section>
+<%- include('../layouts/end') %>

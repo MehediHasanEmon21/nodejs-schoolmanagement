@@ -1,0 +1,29 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Students', href: '/students' }, { label: student.firstName + ' ' + student.lastName }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Student profile', heading: student.firstName + ' ' + student.lastName, description: 'Profile details for this student record.' }) %>
+  <% if (canManage) { %><a href="/students/<%= student.id %>/edit" class="btn btn-primary">Edit</a><% } %>
+</div>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="student-profile-title">
+  <h2 id="student-profile-title" class="mb-5 text-base font-semibold text-slate-900">Profile</h2>
+  <dl class="grid gap-5 sm:grid-cols-2">
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Student ID</dt><dd class="mt-1 text-slate-900"><%= student.studentId %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Status</dt><dd class="mt-1 capitalize text-slate-900"><%= student.status %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Date of birth</dt><dd class="mt-1 text-slate-900"><%= student.dateOfBirth.toISOString().slice(0, 10) %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Admission date</dt><dd class="mt-1 text-slate-900"><%= student.admissionDate.toISOString().slice(0, 10) %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Gender</dt><dd class="mt-1 text-slate-900"><%= student.gender.replaceAll('_', ' ') %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Phone</dt><dd class="mt-1 text-slate-900"><%= student.phone || '—' %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Class</dt><dd class="mt-1 text-slate-900"><%= student.class?.name ?? '—' %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Section</dt><dd class="mt-1 text-slate-900"><%= student.section?.name ?? '—' %></dd></div>
+    <div class="sm:col-span-2"><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Linked account</dt><dd class="mt-1 text-slate-900"><%= student.user ? student.user.name + ' — ' + student.user.email : '—' %></dd></div>
+    <div class="sm:col-span-2"><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Address</dt><dd class="mt-1 whitespace-pre-line text-slate-900"><%= student.address || '—' %></dd></div>
+  </dl>
+  <% if (canManage) { %>
+    <form method="post" action="/students/<%= student.id %>/status" class="mt-6">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="status" value="<%= student.status === 'active' ? 'inactive' : 'active' %>">
+      <button class="btn btn-secondary" type="submit"><%= student.status === 'active' ? 'Deactivate' : 'Activate' %></button>
+    </form>
+  <% } %>
+</section>
+<%- include('../layouts/end') %>

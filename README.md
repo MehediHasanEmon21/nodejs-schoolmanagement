@@ -45,6 +45,7 @@ docker compose exec app npm run check
 docker compose exec app npm run build
 docker compose exec app npm test
 docker compose exec app npm run test:integration
+docker compose exec app npm run seed:demo
 docker compose exec app npm install
 docker compose down
 ```
@@ -66,10 +67,18 @@ docker compose up -d --build
 
 See [the foundation guide](docs/application-foundation.md) for shared partials, request handling, and logging conventions.
 
+## Demo seed data
+
+Run `docker compose exec app npm run seed:demo` to reset and recreate a local demo dataset with accounts for admin, teacher, student and guardian walkthroughs. See [demo seed data](docs/demo-seed-data.md) for credentials, coverage and cleanup.
+
+## Production readiness
+
+Production should use [the production readiness guide](docs/production-readiness.md), `Dockerfile.production`, `docker-compose.production.yml`, and `.env.production.example` as a starting point. The production image runs `node server.js`, uses production dependencies only, exposes `/healthz` for health checks, and should sit behind an HTTPS reverse proxy. Do not reuse the development Compose file for production because it mounts source code and runs file watchers.
+
 ## Persistence and scope
 
 MongoDB stores data in the `mongo_data` named volume at `/data/db`. Ordinary `docker compose down` retains it. **`docker compose down --volumes` deletes local database and dependency volumes** and is not needed for a normal restart.
 
-This Compose setup is for local development. Production configuration belongs to Phase 25. MongoDB initially runs standalone; transaction-dependent modules will need the topology upgrade documented in [the architecture](docs/architecture.md).
+The development Compose setup is for local development. MongoDB initially runs standalone; transaction-dependent modules will need the topology upgrade documented in [the architecture](docs/architecture.md).
 
 See [the action plan](docs/school-management-system-action-plan.md) and [development progress](docs/development-progress.md) for phase boundaries and verification status.

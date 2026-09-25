@@ -1,0 +1,41 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Guardians', href: '/guardians' }, { label: guardian.name }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Guardian profile', heading: guardian.name, description: 'Guardian contact details and linked students.' }) %>
+  <% if (canManage) { %><a href="/guardians/<%= guardian.id %>/edit" class="btn btn-primary">Edit</a><% } %>
+</div>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="guardian-profile-title">
+  <h2 id="guardian-profile-title" class="mb-5 text-base font-semibold text-slate-900">Profile</h2>
+  <dl class="grid gap-5 sm:grid-cols-2">
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Guardian ID</dt><dd class="mt-1 text-slate-900"><%= guardian.guardianId %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Status</dt><dd class="mt-1 capitalize text-slate-900"><%= guardian.status %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Relationship</dt><dd class="mt-1 text-slate-900"><%= guardian.relationship %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Phone</dt><dd class="mt-1 text-slate-900"><%= guardian.phone %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Email</dt><dd class="mt-1 text-slate-900"><%= guardian.email || '—' %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Linked account</dt><dd class="mt-1 text-slate-900"><%= guardian.user ? guardian.user.name + ' - ' + guardian.user.email : '—' %></dd></div>
+    <div class="sm:col-span-2"><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Address</dt><dd class="mt-1 whitespace-pre-line text-slate-900"><%= guardian.address || '—' %></dd></div>
+  </dl>
+  <div class="mt-8">
+    <h3 class="mb-3 text-sm font-semibold text-slate-900">Linked students</h3>
+    <% if (guardian.students.length) { %>
+      <ul class="divide-y divide-slate-100 rounded-lg border border-slate-200">
+        <% for (const student of guardian.students) { %>
+          <li class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
+            <span class="font-medium text-slate-900"><%= student.firstName %> <%= student.lastName %></span>
+            <span class="text-slate-500"><%= student.studentId %></span>
+          </li>
+        <% } %>
+      </ul>
+    <% } else { %>
+      <p class="text-sm text-slate-500">No students are linked to this guardian.</p>
+    <% } %>
+  </div>
+  <% if (canManage) { %>
+    <form method="post" action="/guardians/<%= guardian.id %>/status" class="mt-6">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="status" value="<%= guardian.status === 'active' ? 'inactive' : 'active' %>">
+      <button class="btn btn-secondary" type="submit"><%= guardian.status === 'active' ? 'Deactivate' : 'Activate' %></button>
+    </form>
+  <% } %>
+</section>
+<%- include('../layouts/end') %>

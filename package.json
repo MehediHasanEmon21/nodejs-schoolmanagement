@@ -11,12 +11,16 @@
     "dev": "node scripts/dev.js",
     "check": "node scripts/check.js",
     "dev:server": "nodemon --legacy-watch --signal SIGTERM --watch server.js --watch src --ext js,json --exec \"node --env-file=.env server.js\"",
+    "seed:demo": "node --env-file=.env scripts/seed-demo.js",
     "build": "npm run build:css",
     "build:css": "tailwindcss -i ./src/styles/app.css -o ./public/css/app.css --minify",
     "dev:css": "tailwindcss -i ./src/styles/app.css -o ./public/css/app.css --watch=always",
-    "test": "node --test",
+    "test": "node --test tests/*.test.js",
+    "test:unit": "node --test tests/*.test.js",
     "setup:admin": "node --env-file=.env scripts/create-admin.js",
-    "test:integration": "node --env-file=.env --test tests/*.integration.js"
+    "test:integration": "node --env-file=.env --test tests/*.integration.js",
+    "test:critical": "node --env-file=.env --test tests/auth.integration.js tests/authorization.integration.js tests/enrollment.integration.js tests/attendance.integration.js tests/teacher-assignment.integration.js tests/result.integration.js tests/fee.integration.js tests/payment.integration.js tests/database-constraints.integration.js",
+    "test:all": "npm run check && npm run test:unit && npm run test:integration"
   },
   "dependencies": {
     "argon2": "^0.45.1",

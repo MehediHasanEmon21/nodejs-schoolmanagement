@@ -1,0 +1,29 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Notices', href: '/notices' }, { label: notice ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Announcements', heading: notice ? 'Edit notice' : 'New notice', description: 'Publish role-aware or class-aware school announcements with optional visibility dates.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="notice-form-title">
+  <h2 id="notice-form-title" class="mb-5 text-base font-semibold text-slate-900">Notice details</h2>
+  <form method="post" action="<%= notice ? '/notices/' + notice.id : '/notices' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <%- include('../partials/form-control', { name: 'title', label: 'Title', value: values.title, error: errors.title, required: true }) %>
+    <%- include('../partials/form-control', { name: 'body', type: 'textarea', label: 'Body', value: values.body, error: errors.body, required: true }) %>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'audience', label: 'Audience', value: values.audience, error: errors.audience, options: [{ value: 'everyone', label: 'Everyone' }, { value: 'admins', label: 'Admins' }, { value: 'teachers', label: 'Teachers' }, { value: 'students', label: 'Students' }, { value: 'guardians', label: 'Guardians' }, { value: 'class', label: 'Specific class' }, { value: 'section', label: 'Specific section' }], required: true }) %>
+      <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'draft', label: 'Draft' }, { value: 'published', label: 'Published' }], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'Choose a class when needed' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))] }) %>
+      <%- include('../partials/form-control', { name: 'section', label: 'Section', value: values.section, error: errors.section, options: [{ value: '', label: 'Choose a section when needed' }, ...formOptions.sections.map((item) => ({ value: item._id, label: (item.class?.name ? item.class.name + ' - ' : '') + item.name }))] }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'visibleFrom', type: 'date', label: 'Visible from', value: values.visibleFrom, error: errors.visibleFrom }) %>
+      <%- include('../partials/form-control', { name: 'visibleUntil', type: 'date', label: 'Visible until', value: values.visibleUntil, error: errors.visibleUntil }) %>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: notice ? 'Save changes' : 'Create notice' }) %>
+      <a href="<%= notice ? '/notices/' + notice.id : '/notices' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

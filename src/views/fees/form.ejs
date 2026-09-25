@@ -1,0 +1,27 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Fees', href: '/fees' }, { label: fee ? 'Edit' : 'Assign' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Student fee', heading: fee ? 'Edit fee' : 'Assign fee', description: 'Create or update a student fee obligation with amount, due date and status.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="fee-form-title">
+  <h2 id="fee-form-title" class="mb-5 text-base font-semibold text-slate-900">Fee details</h2>
+  <form method="post" action="<%= fee ? '/fees/' + fee.id : '/fees' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-3">
+      <%- include('../partials/form-control', { name: 'student', label: 'Student', value: values.student, error: errors.student, options: [{ value: '', label: 'Choose a student' }, ...formOptions.students.map((item) => ({ value: item._id, label: item.firstName + ' ' + item.lastName + ' (' + item.studentId + ')' }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: values.academicYear, error: errors.academicYear, options: [{ value: '', label: 'Choose an academic year' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'feeType', label: 'Fee type', value: values.feeType, error: errors.feeType, options: [{ value: '', label: 'Choose a fee type' }, ...formOptions.feeTypes.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-4">
+      <%- include('../partials/form-control', { name: 'amount', type: 'number', label: 'Amount', value: values.amount, error: errors.amount, required: true }) %>
+      <%- include('../partials/form-control', { name: 'paidAmount', type: 'number', label: 'Paid amount', value: values.paidAmount, error: errors.paidAmount, required: true }) %>
+      <%- include('../partials/form-control', { name: 'dueDate', type: 'date', label: 'Due date', value: values.dueDate, error: errors.dueDate, required: true }) %>
+      <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'pending', label: 'Pending' }, { value: 'partial', label: 'Partial' }, { value: 'paid', label: 'Paid' }, { value: 'waived', label: 'Waived' }, { value: 'cancelled', label: 'Cancelled' }], required: true }) %>
+    </div>
+    <%- include('../partials/form-control', { name: 'note', type: 'textarea', label: 'Note', value: values.note, error: errors.note }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: fee ? 'Save changes' : 'Assign fee' }) %>
+      <a href="<%= fee ? '/fees/' + fee.id : '/fees' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

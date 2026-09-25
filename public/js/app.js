@@ -53,3 +53,7 @@ document.querySelectorAll('form[data-confirm-dialog]').forEach((form) => {
         event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close();
   });
 });
+
+document.querySelectorAll('[data-print-button]').forEach((button) => {
+  button.addEventListener('click', () => window.print());
+});

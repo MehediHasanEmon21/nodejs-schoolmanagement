@@ -1,0 +1,17 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Classes', href: '/classes' }, { label: record ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Academic structure', heading: record ? 'Edit class' : 'New class', description: 'Class names should match how the school refers to grade levels.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="class-form-title">
+  <h2 id="class-form-title" class="mb-5 text-base font-semibold text-slate-900">Class details</h2>
+  <form method="post" action="<%= record ? '/classes/' + record.id : '/classes' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true, hint: 'Example: Grade 8' }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: record ? 'Save changes' : 'Create class' }) %>
+      <a href="/classes" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

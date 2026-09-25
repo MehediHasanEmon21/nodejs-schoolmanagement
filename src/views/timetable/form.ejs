@@ -1,0 +1,31 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Timetable', href: '/timetable' }, { label: entry ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Weekly schedule', heading: entry ? 'Edit timetable entry' : 'New timetable entry', description: 'Choose an active assignment and a time range that does not overlap the class or teacher schedule.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="timetable-form-title">
+  <h2 id="timetable-form-title" class="mb-5 text-base font-semibold text-slate-900">Entry details</h2>
+  <form method="post" action="<%= entry ? '/timetable/' + entry.id : '/timetable' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: values.academicYear, error: errors.academicYear, options: [{ value: '', label: 'Choose an academic year' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'teacher', label: 'Teacher', value: values.teacher, error: errors.teacher, options: [{ value: '', label: 'Choose a teacher' }, ...formOptions.teachers.map((item) => ({ value: item._id, label: item.name + ' (' + item.teacherId + ')' }))], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-3">
+      <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'Choose a class' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'section', label: 'Section', value: values.section, error: errors.section, options: [{ value: '', label: 'Choose a section' }, ...formOptions.sections.map((item) => ({ value: item._id, label: (item.class?.name ? item.class.name + ' - ' : '') + item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'subject', label: 'Subject', value: values.subject, error: errors.subject, options: [{ value: '', label: 'Choose a subject' }, ...formOptions.subjects.map((item) => ({ value: item._id, label: item.name + (item.code ? ' (' + item.code + ')' : '') }))], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-5">
+      <%- include('../partials/form-control', { name: 'day', label: 'Day', value: values.day, error: errors.day, options: formOptions.days.map((item) => ({ value: item, label: item.charAt(0).toUpperCase() + item.slice(1) })), required: true }) %>
+      <%- include('../partials/form-control', { name: 'startTime', type: 'time', label: 'Start time', value: values.startTime, error: errors.startTime, required: true }) %>
+      <%- include('../partials/form-control', { name: 'endTime', type: 'time', label: 'End time', value: values.endTime, error: errors.endTime, required: true }) %>
+      <%- include('../partials/form-control', { name: 'room', label: 'Room', value: values.room, error: errors.room }) %>
+      <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: entry ? 'Save changes' : 'Create entry' }) %>
+      <a href="<%= entry ? '/timetable/' + entry.id : '/timetable' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

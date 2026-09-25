@@ -1,0 +1,23 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Enrollments', href: '/enrollments' }, { label: schoolClass.name + ' students' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Class students', heading: schoolClass.name, description: 'Active student enrollments for this class.' }) %>
+<section class="panel overflow-x-auto" aria-labelledby="class-students-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="class-students-title" class="px-5 py-4 text-left font-semibold text-slate-900">Class student records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600"><tr><th scope="col" class="px-5 py-3 font-medium">Student</th><th scope="col" class="px-5 py-3 font-medium">Year</th><th scope="col" class="px-5 py-3 font-medium">Section</th><th scope="col" class="px-5 py-3 font-medium">Roll</th><th scope="col" class="px-5 py-3 font-medium">Status</th></tr></thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const enrollment of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/enrollments/<%= enrollment._id %>" class="hover:text-teal-800"><%= enrollment.student.firstName %> <%= enrollment.student.lastName %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.academicYear.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.rollNumber %></td>
+          <td class="px-5 py-4 capitalize"><%= enrollment.status %></td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No active student enrollments found for this class.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../partials/pagination', { page: filters.page, totalPages, previousUrl, nextUrl }) %>
+<%- include('../layouts/end') %>

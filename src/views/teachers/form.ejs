@@ -1,0 +1,29 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Teachers', href: '/teachers' }, { label: teacher ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Teacher management', heading: teacher ? 'Edit teacher' : 'New teacher', description: 'Keep teacher profile details here; teaching assignments arrive in their own module.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="teacher-form-title">
+  <h2 id="teacher-form-title" class="mb-5 text-base font-semibold text-slate-900">Teacher details</h2>
+  <form method="post" action="<%= teacher ? '/teachers/' + teacher.id : '/teachers' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'teacherId', label: 'Teacher ID', value: values.teacherId, error: errors.teacherId, required: true }) %>
+      <%- include('../partials/form-control', { name: 'user', label: 'Linked account', value: values.user, error: errors.user, options: [{ value: '', label: 'No linked account' }, ...formOptions.users.map((item) => ({ value: item._id, label: item.name + ' - ' + item.email }))] }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true }) %>
+      <%- include('../partials/form-control', { name: 'email', type: 'email', label: 'Email', value: values.email, error: errors.email, required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'phone', type: 'tel', label: 'Phone', value: values.phone, error: errors.phone }) %>
+      <%- include('../partials/form-control', { name: 'joiningDate', type: 'date', label: 'Joining date', value: values.joiningDate, error: errors.joiningDate, required: true }) %>
+    </div>
+    <%- include('../partials/form-control', { name: 'qualification', type: 'textarea', label: 'Qualification', value: values.qualification, error: errors.qualification }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: teacher ? 'Save changes' : 'Create teacher' }) %>
+      <a href="<%= teacher ? '/teachers/' + teacher.id : '/teachers' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

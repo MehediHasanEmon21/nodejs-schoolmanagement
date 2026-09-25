@@ -1,0 +1,28 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Enrollments', href: '/enrollments' }, { label: enrollment ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Student enrollment', heading: enrollment ? 'Edit enrollment' : 'New enrollment', description: 'Choose an active academic year, class and matching section for this student.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="enrollment-form-title">
+  <h2 id="enrollment-form-title" class="mb-5 text-base font-semibold text-slate-900">Enrollment details</h2>
+  <form method="post" action="<%= enrollment ? '/enrollments/' + enrollment.id : '/enrollments' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'student', label: 'Student', value: values.student, error: errors.student, options: [{ value: '', label: 'Choose a student' }, ...formOptions.students.map((item) => ({ value: item._id, label: item.firstName + ' ' + item.lastName + ' (' + item.studentId + ')' }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: values.academicYear, error: errors.academicYear, options: [{ value: '', label: 'Choose an academic year' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'Choose a class' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'section', label: 'Section', value: values.section, error: errors.section, options: [{ value: '', label: 'Choose a section' }, ...formOptions.sections.map((item) => ({ value: item._id, label: (item.class?.name ? item.class.name + ' - ' : '') + item.name }))], required: true }) %>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-3">
+      <%- include('../partials/form-control', { name: 'rollNumber', label: 'Roll number', value: values.rollNumber, error: errors.rollNumber, required: true }) %>
+      <%- include('../partials/form-control', { name: 'enrollmentDate', type: 'date', label: 'Enrollment date', value: values.enrollmentDate, error: errors.enrollmentDate, required: true }) %>
+      <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }, { value: 'completed', label: 'Completed' }, { value: 'transferred', label: 'Transferred' }], required: true }) %>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: enrollment ? 'Save changes' : 'Create enrollment' }) %>
+      <a href="<%= enrollment ? '/enrollments/' + enrollment.id : '/enrollments' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

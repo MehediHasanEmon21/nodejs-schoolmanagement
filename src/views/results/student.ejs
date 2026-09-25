@@ -1,0 +1,29 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Results', href: '/results' }, { label: student.firstName + ' result' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Student result', heading: student.firstName + ' ' + student.lastName, description: exam.name + ' · ' + exam.class.name }) %>
+<section class="mt-6 grid gap-4 sm:grid-cols-4" aria-label="Result summary">
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Marks</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.marksObtained %>/<%= summary.totalMarks %></p></div>
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Percentage</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.percentage.toFixed(2) %>%</p></div>
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Grade</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.grade %></p></div>
+  <div class="panel px-5 py-4"><p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Result</p><p class="mt-2 text-2xl font-semibold text-slate-950"><%= summary.passed ? 'Pass' : 'Fail' %></p></div>
+</section>
+<section class="panel mt-6 overflow-x-auto" aria-labelledby="student-result-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="student-result-title" class="px-5 py-4 text-left font-semibold text-slate-900">Subject results</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr><th scope="col" class="px-5 py-3 font-medium">Subject</th><th scope="col" class="px-5 py-3 font-medium">Marks</th><th scope="col" class="px-5 py-3 font-medium">Pass marks</th><th scope="col" class="px-5 py-3 font-medium">Grade</th><th scope="col" class="px-5 py-3 font-medium">Result</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const row of rows) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><%= row.subject.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.result.marksObtained %>/<%= row.result.totalMarks %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.result.passMarks %></td>
+          <td class="px-5 py-4 text-slate-600"><%= row.result.grade %></td>
+          <td class="px-5 py-4"><%= row.result.passed ? 'Pass' : 'Fail' %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

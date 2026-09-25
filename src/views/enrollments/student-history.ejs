@@ -1,0 +1,22 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Enrollments', href: '/enrollments' }, { label: student.firstName + ' ' + student.lastName }] }) %>
+<%- include('../partials/header', { eyebrow: 'Enrollment history', heading: student.firstName + ' ' + student.lastName, description: 'Historical academic placements for this student.' }) %>
+<section class="panel overflow-x-auto" aria-labelledby="student-history-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="student-history-title" class="px-5 py-4 text-left font-semibold text-slate-900">Enrollment history</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600"><tr><th scope="col" class="px-5 py-3 font-medium">Year</th><th scope="col" class="px-5 py-3 font-medium">Class</th><th scope="col" class="px-5 py-3 font-medium">Section</th><th scope="col" class="px-5 py-3 font-medium">Roll</th><th scope="col" class="px-5 py-3 font-medium">Status</th></tr></thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const enrollment of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/enrollments/<%= enrollment._id %>" class="hover:text-teal-800"><%= enrollment.academicYear.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.class.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.section.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= enrollment.rollNumber %></td>
+          <td class="px-5 py-4 capitalize"><%= enrollment.status %></td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No enrollment history is available for this student.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

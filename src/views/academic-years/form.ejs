@@ -1,0 +1,28 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Academic years', href: '/academic-years' }, { label: academicYear ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Academic setup', heading: academicYear ? 'Edit academic year' : 'New academic year', description: 'Use exact dates so attendance, enrollment and later academic records can attach to the right year.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="academic-year-form-title">
+  <h2 id="academic-year-form-title" class="mb-5 text-base font-semibold text-slate-900">Academic year details</h2>
+  <form method="post" action="<%= academicYear ? '/academic-years/' + academicYear.id : '/academic-years' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true, hint: 'Example: 2026-2027' }) %>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'startDate', type: 'date', label: 'Start date', value: values.startDate, error: errors.startDate, required: true }) %>
+      <%- include('../partials/form-control', { name: 'endDate', type: 'date', label: 'End date', value: values.endDate, error: errors.endDate, required: true }) %>
+    </div>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }], required: true }) %>
+    <div class="space-y-2">
+      <label class="flex items-start gap-3 text-sm font-medium text-slate-800">
+        <input type="checkbox" name="isCurrent" class="mt-1 h-4 w-4 rounded border-slate-300 text-teal-800 focus:ring-teal-700" <% if (values.isCurrent) { %>checked<% } %>>
+        <span>Make this the current academic year</span>
+      </label>
+      <% if (errors.isCurrent) { %><p class="text-sm text-red-700"><%= errors.isCurrent %></p><% } %>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: academicYear ? 'Save changes' : 'Create academic year' }) %>
+      <a href="<%= academicYear ? '/academic-years/' + academicYear.id : '/academic-years' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

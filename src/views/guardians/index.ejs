@@ -1,0 +1,51 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Guardians' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Guardian management', heading: 'Guardians', description: 'Manage guardian profiles and connect each guardian to one or more students.' }) %>
+  <% if (canManage) { %><a href="/guardians/new" class="btn btn-primary">New guardian</a><% } %>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel mb-5 px-5 py-5 sm:px-6" aria-labelledby="guardian-filters-title">
+  <h2 id="guardian-filters-title" class="mb-4 text-base font-semibold text-slate-900">Find guardians</h2>
+  <form method="get" action="/guardians" class="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,1fr))_auto] lg:items-end">
+    <%- include('../partials/form-control', { name: 'q', type: 'search', label: 'Search', value: filters.q, hint: 'Name, guardian ID, email, phone or relationship' }) %>
+    <%- include('../partials/form-control', { name: 'status', label: 'Status', value: filters.status, options: [{ value: '', label: 'All statuses' }, { value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }] }) %>
+    <%- include('../partials/form-control', { name: 'sort', label: 'Sort', value: filters.sort, options: [{ value: 'name', label: 'Name' }, { value: 'guardianId', label: 'Guardian ID' }, { value: 'relationship', label: 'Relationship' }, { value: 'status', label: 'Status' }] }) %>
+    <button class="btn btn-secondary" type="submit">Apply</button>
+  </form>
+</section>
+<section class="panel overflow-x-auto" aria-labelledby="guardians-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="guardians-title" class="px-5 py-4 text-left font-semibold text-slate-900">Guardian records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+      <tr>
+        <th scope="col" class="px-5 py-3 font-medium">Guardian</th>
+        <th scope="col" class="px-5 py-3 font-medium">ID</th>
+        <th scope="col" class="px-5 py-3 font-medium">Relationship</th>
+        <th scope="col" class="px-5 py-3 font-medium">Students</th>
+        <th scope="col" class="px-5 py-3 font-medium">Status</th>
+        <th scope="col" class="px-5 py-3 font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const guardian of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><a href="/guardians/<%= guardian._id %>" class="hover:text-teal-800"><%= guardian.name %></a></td>
+          <td class="px-5 py-4 text-slate-600"><%= guardian.guardianId %></td>
+          <td class="px-5 py-4 text-slate-600"><%= guardian.relationship %></td>
+          <td class="px-5 py-4 text-slate-600"><%= guardian.students.map((student) => student.firstName + ' ' + student.lastName).join(', ') || '—' %></td>
+          <td class="px-5 py-4 capitalize"><%= guardian.status %></td>
+          <td class="px-5 py-4">
+            <div class="flex flex-wrap gap-2">
+              <a href="/guardians/<%= guardian._id %>" class="btn btn-secondary">View</a>
+              <% if (canManage) { %><a href="/guardians/<%= guardian._id %>/edit" class="btn btn-secondary">Edit</a><% } %>
+            </div>
+          </td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="6" class="px-5 py-10 text-center text-slate-500">No guardians match the current filters.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../partials/pagination', { page: filters.page, totalPages, previousUrl, nextUrl }) %>
+<%- include('../layouts/end') %>

@@ -1,0 +1,67 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Exams', href: '/exams' }, { label: exam ? 'Edit' : 'New' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Exam setup', heading: exam ? 'Edit exam' : 'New exam', description: 'Configure the exam window and subject mark rules for one class.' }) %>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'error', message }) %></div><% } %>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="exam-form-title">
+  <h2 id="exam-form-title" class="mb-5 text-base font-semibold text-slate-900">Exam details</h2>
+  <form method="post" action="<%= exam ? '/exams/' + exam.id : '/exams' %>" class="space-y-5" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: values.academicYear, error: errors.academicYear, options: [{ value: '', label: 'Choose an academic year' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+      <%- include('../partials/form-control', { name: 'class', label: 'Class', value: values.class, error: errors.class, options: [{ value: '', label: 'Choose a class' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))], required: true }) %>
+    </div>
+    <%- include('../partials/form-control', { name: 'name', label: 'Name', value: values.name, error: errors.name, required: true, hint: 'Example: Midterm Exam' }) %>
+    <div class="grid gap-5 sm:grid-cols-3">
+      <%- include('../partials/form-control', { name: 'startDate', type: 'date', label: 'Start date', value: values.startDate, error: errors.startDate, required: true }) %>
+      <%- include('../partials/form-control', { name: 'endDate', type: 'date', label: 'End date', value: values.endDate, error: errors.endDate, required: true }) %>
+      <%- include('../partials/form-control', { name: 'status', label: 'Status', value: values.status, error: errors.status, options: [{ value: 'draft', label: 'Draft' }, { value: 'scheduled', label: 'Scheduled' }, { value: 'completed', label: 'Completed' }, { value: 'cancelled', label: 'Cancelled' }], required: true }) %>
+    </div>
+    <div>
+      <div class="mb-3 flex items-center justify-between gap-4">
+        <h3 class="text-base font-semibold text-slate-900">Subject setup</h3>
+        <% if (errors.subjects) { %><p class="text-sm text-red-700"><%= errors.subjects %></p><% } %>
+      </div>
+      <div class="overflow-x-auto rounded-md border border-slate-200" tabindex="0">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead class="border-b border-slate-200 bg-slate-50 text-slate-600">
+            <tr><th scope="col" class="px-4 py-3 font-medium">Subject</th><th scope="col" class="px-4 py-3 font-medium">Total marks</th><th scope="col" class="px-4 py-3 font-medium">Pass marks</th><th scope="col" class="px-4 py-3 font-medium">Exam date</th></tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% const subjectRows = values.subjects.length ? values.subjects : [{ subject: '', totalMarks: '100', passMarks: '33', examDate: '' }]; %>
+            <% for (const row of subjectRows) { %>
+              <tr>
+                <td class="px-4 py-3">
+                  <select name="subjects" class="field min-w-64">
+                    <option value="">Choose a subject</option>
+                    <% for (const subject of formOptions.subjects) { %><option value="<%= subject._id %>" <%= String(subject._id) === String(row.subject) ? 'selected' : '' %>><%= subject.name %><%= subject.code ? ' (' + subject.code + ')' : '' %></option><% } %>
+                  </select>
+                </td>
+                <td class="px-4 py-3"><input class="field min-w-32" name="totalMarks" type="number" min="1" max="1000" step="0.01" value="<%= row.totalMarks %>"></td>
+                <td class="px-4 py-3"><input class="field min-w-32" name="passMarks" type="number" min="0" max="1000" step="0.01" value="<%= row.passMarks %>"></td>
+                <td class="px-4 py-3"><input class="field min-w-40" name="examDate" type="date" value="<%= row.examDate %>"></td>
+              </tr>
+            <% } %>
+            <% for (let index = subjectRows.length; index < Math.min(formOptions.subjects.length, subjectRows.length + 3); index += 1) { %>
+              <tr>
+                <td class="px-4 py-3">
+                  <select name="subjects" class="field min-w-64">
+                    <option value="">Choose a subject</option>
+                    <% for (const subject of formOptions.subjects) { %><option value="<%= subject._id %>"><%= subject.name %><%= subject.code ? ' (' + subject.code + ')' : '' %></option><% } %>
+                  </select>
+                </td>
+                <td class="px-4 py-3"><input class="field min-w-32" name="totalMarks" type="number" min="1" max="1000" step="0.01" value="100"></td>
+                <td class="px-4 py-3"><input class="field min-w-32" name="passMarks" type="number" min="0" max="1000" step="0.01" value="33"></td>
+                <td class="px-4 py-3"><input class="field min-w-40" name="examDate" type="date"></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <%- include('../partials/button', { type: 'submit', label: exam ? 'Save changes' : 'Create exam' }) %>
+      <a href="<%= exam ? '/exams/' + exam.id : '/exams' %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../layouts/end') %>

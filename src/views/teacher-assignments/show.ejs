@@ -1,0 +1,22 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Teacher assignments', href: '/teacher-assignments' }, { label: assignment.teacher.name }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Teacher assignment', heading: assignment.teacher.name, description: 'Academic responsibility details for this teacher.' }) %>
+  <% if (canManage) { %><a href="/teacher-assignments/<%= assignment.id %>/edit" class="btn btn-primary">Edit</a><% } %>
+</div>
+<section class="panel px-5 py-6 sm:px-6" aria-labelledby="assignment-title">
+  <h2 id="assignment-title" class="mb-5 text-base font-semibold text-slate-900">Assignment details</h2>
+  <dl class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Teacher ID</dt><dd class="mt-1 text-slate-900"><%= assignment.teacher.teacherId %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Academic year</dt><dd class="mt-1 text-slate-900"><%= assignment.academicYear.name %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Class</dt><dd class="mt-1 text-slate-900"><%= assignment.class.name %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Section</dt><dd class="mt-1 text-slate-900"><%= assignment.section.name %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Subject</dt><dd class="mt-1 text-slate-900"><%= assignment.subject.name %><% if (assignment.subject.code) { %> (<%= assignment.subject.code %>)<% } %></dd></div>
+    <div><dt class="text-xs font-semibold tracking-widest text-slate-500 uppercase">Status</dt><dd class="mt-1 capitalize text-slate-900"><%= assignment.status %></dd></div>
+  </dl>
+  <div class="mt-6 flex flex-wrap gap-3">
+    <a href="/teacher-assignments/teachers/<%= assignment.teacher._id %>" class="btn btn-secondary">Teacher assignments</a>
+    <a href="/teacher-assignments/classes/<%= assignment.class._id %>" class="btn btn-secondary">Class subject teachers</a>
+  </div>
+</section>
+<%- include('../layouts/end') %>

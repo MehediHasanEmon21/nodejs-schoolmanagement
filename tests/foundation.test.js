@@ -36,6 +36,11 @@ test('home renders shared layout and serves compiled styles, script and image', 
   assert.equal(response.status, 200);
   assert.match(response.headers.get('content-type'), /text\/html/);
   assert.equal(response.headers.get('x-powered-by'), null);
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(response.headers.get('x-frame-options'), 'DENY');
+  assert.equal(response.headers.get('referrer-policy'), 'no-referrer');
+  assert.match(response.headers.get('content-security-policy'), /script-src 'self'/);
+  assert.match(response.headers.get('content-security-policy'), /frame-ancestors 'none'/);
   const html = await response.text();
   for (const content of ['Every school day, connected.', 'Main navigation', 'Skip to content', '<footer', '/css/app.css', '/js/app.js']) {
     assert.ok(html.includes(content), content);
@@ -50,6 +55,15 @@ test('home renders shared layout and serves compiled styles, script and image', 
     assert.match(asset.headers.get('content-type'), mime);
     assert.ok((await asset.text()).includes(marker));
   }
+});
+
+test('health check returns a no-store JSON status', async (t) => {
+  const app = await serve(t);
+  const response = await app.fetch('/healthz');
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.match(response.headers.get('content-type'), /application\/json/);
+  assert.deepEqual(await response.json(), { status: 'ok' });
 });
 
 test('unknown paths and private files get an escaped HTML 404', async (t) => {
@@ -76,11 +90,15 @@ test('JSON and URL-encoded forms parse; invalid and oversized bodies fail safely
     ['application/json', '{"password":"private",', 400],
     ['application/json', JSON.stringify({ text: 'x'.repeat(103000) }), 413],
     ['application/x-www-form-urlencoded', Array.from({ length: 101 }, (_, i) => `k${i}=private`).join('&'), 413],
+    ['application/json', JSON.stringify({ $where: 'private' }), 400],
+    ['application/json', JSON.stringify({ profile: { 'password.hash': 'private' } }), 400],
   ]) {
     const response = await app.fetch('/echo', { method: 'POST', headers: { 'Content-Type': contentType }, body });
     assert.equal(response.status, status);
     assert.ok(!(await response.text()).includes('private'));
   }
+  const polluted = await app.fetch('/echo?name=Ada&name=Grace', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"ok":true}' });
+  assert.equal(polluted.status, 400);
 });
 
 test('async failures return safe production pages and correlated logs without secrets', async (t) => {

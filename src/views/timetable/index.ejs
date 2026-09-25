@@ -1,0 +1,52 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Timetable' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Weekly schedule', heading: 'Timetable', description: 'Review the weekly academic schedule by class, section, teacher or day.' }) %>
+  <% if (canManage) { %><a href="/timetable/new" class="btn btn-primary">New entry</a><% } %>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel mb-5 px-5 py-5 sm:px-6" aria-labelledby="timetable-filters-title">
+  <h2 id="timetable-filters-title" class="mb-4 text-base font-semibold text-slate-900">Find timetable entries</h2>
+  <form method="get" action="/timetable" class="grid gap-4 lg:grid-cols-6 lg:items-end">
+    <%- include('../partials/form-control', { name: 'academicYear', label: 'Academic year', value: filters.academicYear, options: [{ value: '', label: 'All years' }, ...formOptions.academicYears.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'class', label: 'Class', value: filters.class, options: [{ value: '', label: 'All classes' }, ...formOptions.classes.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'section', label: 'Section', value: filters.section, options: [{ value: '', label: 'All sections' }, ...formOptions.sections.map((item) => ({ value: item._id, label: (item.class?.name ? item.class.name + ' - ' : '') + item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'teacher', label: 'Teacher', value: filters.teacher, options: [{ value: '', label: 'All teachers' }, ...formOptions.teachers.map((item) => ({ value: item._id, label: item.name }))] }) %>
+    <%- include('../partials/form-control', { name: 'day', label: 'Day', value: filters.day, options: [{ value: '', label: 'All days' }, ...formOptions.days.map((item) => ({ value: item, label: item.charAt(0).toUpperCase() + item.slice(1) }))] }) %>
+    <button class="btn btn-secondary" type="submit">Apply</button>
+  </form>
+</section>
+<section class="space-y-4" aria-labelledby="weekly-timetable-title">
+  <h2 id="weekly-timetable-title" class="sr-only">Weekly timetable</h2>
+  <% for (const group of grouped) { %>
+    <div class="panel overflow-x-auto" tabindex="0">
+      <table class="w-full border-collapse text-left text-sm">
+        <caption class="px-5 py-4 text-left font-semibold capitalize text-slate-900"><%= group.day %></caption>
+        <thead class="border-y border-slate-200 bg-slate-50 text-slate-600">
+          <tr>
+            <th scope="col" class="px-5 py-3 font-medium">Time</th>
+            <th scope="col" class="px-5 py-3 font-medium">Class</th>
+            <th scope="col" class="px-5 py-3 font-medium">Subject</th>
+            <th scope="col" class="px-5 py-3 font-medium">Teacher</th>
+            <th scope="col" class="px-5 py-3 font-medium">Room</th>
+            <th scope="col" class="px-5 py-3 font-medium">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% for (const entry of group.records) { %>
+            <tr>
+              <td class="px-5 py-4 font-medium text-slate-900"><%= entry.startTime %> - <%= entry.endTime %></td>
+              <td class="px-5 py-4 text-slate-600"><%= entry.class.name %> / <%= entry.section.name %></td>
+              <td class="px-5 py-4 text-slate-600"><%= entry.subject.name %></td>
+              <td class="px-5 py-4 text-slate-600"><%= entry.teacher.name %></td>
+              <td class="px-5 py-4 text-slate-600"><%= entry.room || 'Not assigned' %></td>
+              <td class="px-5 py-4"><a href="/timetable/<%= entry._id %>" class="btn btn-secondary">View</a></td>
+            </tr>
+          <% } %>
+          <% if (group.records.length === 0) { %><tr><td colspan="6" class="px-5 py-8 text-center text-slate-500">No classes scheduled.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+<%- include('../layouts/end') %>

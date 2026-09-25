@@ -1,0 +1,26 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Subjects' }] }) %>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+  <%- include('../partials/header', { eyebrow: 'Academic structure', heading: 'Subjects', description: 'Create subjects and assign them to the classes that study them.' }) %>
+  <a href="/subjects/new" class="btn btn-primary">New subject</a>
+</div>
+<% if (message) { %><div class="mb-5"><%- include('../partials/alert', { kind: 'success', message }) %></div><% } %>
+<section class="panel overflow-x-auto" aria-labelledby="subjects-title" tabindex="0">
+  <table class="w-full border-collapse text-left text-sm">
+    <caption id="subjects-title" class="px-5 py-4 text-left font-semibold text-slate-900">Subject records</caption>
+    <thead class="border-y border-slate-200 bg-slate-50 text-slate-600"><tr><th scope="col" class="px-5 py-3 font-medium">Subject</th><th scope="col" class="px-5 py-3 font-medium">Code</th><th scope="col" class="px-5 py-3 font-medium">Classes</th><th scope="col" class="px-5 py-3 font-medium">Status</th><th scope="col" class="px-5 py-3 font-medium">Actions</th></tr></thead>
+    <tbody class="divide-y divide-slate-100">
+      <% for (const record of records) { %>
+        <tr>
+          <td class="px-5 py-4 font-medium text-slate-900"><%= record.name %></td>
+          <td class="px-5 py-4 text-slate-600"><%= record.code || '—' %></td>
+          <td class="px-5 py-4 text-slate-600"><%= record.classes.map((item) => item.name).join(', ') || '—' %></td>
+          <td class="px-5 py-4 capitalize"><%= record.status %></td>
+          <td class="px-5 py-4"><a href="/subjects/<%= record._id %>/edit" class="btn btn-secondary">Edit</a></td>
+        </tr>
+      <% } %>
+      <% if (records.length === 0) { %><tr><td colspan="5" class="px-5 py-10 text-center text-slate-500">No subjects have been created yet.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include('../layouts/end') %>

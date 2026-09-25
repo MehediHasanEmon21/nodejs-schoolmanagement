@@ -14,6 +14,10 @@ test('session configuration rejects unsafe secrets and invalid timeouts', () => 
   assert.equal(config.idleMs, 1800000);
   assert.equal(config.absoluteMs, 43200000);
   assert.equal(config.trustProxy, false);
+  assert.equal(sessionConfig({ SESSION_SECRET: 'a'.repeat(64), TRUST_PROXY: 'true' }).trustProxy, true);
+  assert.equal(sessionConfig({ SESSION_SECRET: 'a'.repeat(64), TRUST_PROXY: '2' }).trustProxy, 2);
+  assert.equal(sessionConfig({ SESSION_SECRET: 'a'.repeat(64), TRUST_PROXY: 'loopback, linklocal' }).trustProxy, 'loopback, linklocal');
+  assert.throws(() => sessionConfig({ SESSION_SECRET: 'a'.repeat(64), TRUST_PROXY: 'bad value!' }), /Invalid TRUST_PROXY/);
   assert.throws(() => sessionConfig({ SESSION_SECRET: 'a'.repeat(64), SESSION_IDLE_MINUTES: '0' }));
   assert.throws(() => createSessionMiddleware(config));
 });

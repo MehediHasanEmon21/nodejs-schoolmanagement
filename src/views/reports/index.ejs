@@ -1,0 +1,17 @@
+<%- include('../layouts/start') %>
+<%- include('../partials/breadcrumbs', { items: [{ label: 'Your school', href: '/' }, { label: 'Reports' }] }) %>
+<%- include('../partials/header', { eyebrow: 'Operations', heading: 'Reports', description: 'Review printable operational reports from active school records.' }) %>
+<section class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-label="Reports">
+  <% for (const item of [
+    { href: '/reports/students', title: 'Student report', text: 'Student directory with status and class filters.' },
+    { href: '/reports/attendance', title: 'Attendance report', text: 'Daily attendance summaries across date ranges.' },
+    { href: '/reports/results', title: 'Result report', text: 'Class result summary for a selected exam.' },
+    { href: '/reports/fees', title: 'Fee report', text: 'Assigned, paid and outstanding fee totals.' },
+  ]) { %>
+    <a href="<%= item.href %>" class="panel block px-5 py-5 hover:border-teal-500">
+      <h2 class="text-base font-semibold text-slate-900"><%= item.title %></h2>
+      <p class="mt-2 text-sm text-slate-600"><%= item.text %></p>
+    </a>
+  <% } %>
+</section>
+<%- include('../layouts/end') %>
